@@ -23,7 +23,7 @@ body {
 
 #c {
   /* margin: 10px; */
-  border:1px solid #000;
+  border:3px double #000;
 }
 
 #colorPickerContainer {
@@ -31,6 +31,7 @@ body {
 }
 
 #colorPickerContainer .color {
+  border:1px solid #888;
   background-color: #FF0000;
   display: inline-block;
   width: 30px;
