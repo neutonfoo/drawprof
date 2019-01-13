@@ -32,6 +32,17 @@
         margin:0 auto 0 auto;
           border:1px solid #000;
       }
+
+      #colorPickerContainer {
+
+      }
+
+      .color {
+        background-color: #FF0000;
+        display: inline-block;
+        width: 30px;
+        height: 30px;
+      }
     </style>
   </head>
   <body>
@@ -45,6 +56,22 @@
         <h1 id="profName"></h1>
         <h2 id="uniName"></h2>
         <canvas id="c" width="500px" height="700px"></canvas>
+        <div id="colorPickerContainer">
+          <span class="color"></span>
+          <span class="color"></span>
+          <span class="color"></span>
+          <span class="color"></span>
+          <span class="color"></span>
+          <span class="color"></span>
+          <span class="color"></span>
+          <span class="color"></span>
+          <span class="color"></span>
+          <span class="color"></span>
+          <span class="color"></span>
+          <span class="color"></span>
+          <span class="color"></span>
+          <span class="color"></span>
+        </div>
         <script type="text/javascript">
           $(document).ready(function() {
             var $profName = $('#profName')
