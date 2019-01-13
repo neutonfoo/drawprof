@@ -2,13 +2,14 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
-    <title>Eh</title>
+    <title>Something Something</title>
     <link rel="stylesheet" href="css/bootstrap.min.css"/>
     <meta name="viewport" content="initial-scale=1.0">
     <script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
     <script type="text/javascript" src="js/bootstrap.min.js"></script>
     <style media="screen" type="text/css">
-      * {
+
+    * {
         margin:0;
         padding:0
       }
@@ -17,11 +18,25 @@
         background-color: #DDD;
       }
 
-      #mainContainer {
+      /* #mainContainer {
         width: 800px;
+
         margin: 50px auto 0 auto;
+        padding: 10px;
+
+        background-color: #FFF;
+      } */
+
+      .container {
+        margin:10px auto 10px auto;
+        min-width: 600px;
+
         border:1px solid #888;
         background-color: #FFF;
+      }
+
+      .row {
+        padding: 10px;
       }
 
       #canvasContainer {
@@ -50,17 +65,36 @@
     </style>
   </head>
   <body>
-    <div id="mainContainer">
-      <h1>Eh</h1>
-      <div class="">
-        <input type="text" id="loadProfUrl" value="https://www.ratemyprofessors.com/ShowRatings.jsp?tid=2163737" placeholder="https://www.ratemyprofessors.com/ShowRatings.jsp?tid=2163737">
-        <input type="button" id="loadProfButton" value="Load">
+    <nav class="navbar navbar-light bg-light">
+      <span class="navbar-brand mb-0 h1">Something Something</span>
+      <form class="form-inline">
+        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+      </form>
+    </nav>
+    <div class="container">
+      <div class="row">
+        <div class="input-group">
+          <input type="text" id="loadProfUrl" class="form-control" placeholder="Professor's Rate My Professor URL" value="https://www.ratemyprofessors.com/ShowRatings.jsp?tid=2163737">
+          <div class="input-group-append">
+            <button type="button" id="loadProfButton" class="btn btn-outline-secondary">Load Info</button>
+          </div>
+        </div>
       </div>
+      <h1></h1>
       <div id="canvasContainer">
-        <h1 id="profName"></h1>
-        <h2 id="uniName"></h2>
+        <h1 id="profName">&nbsp;</h1>
+        <h2 id="uniName">&nbsp;</h2>
         <canvas id="c" width="500px" height="700px"></canvas>
         <div id="colorPickerContainer"></div>
+        <div id="controlsContainer">
+          <form id="uploadForm" action="upload.php" method="post">
+            <input type="hidden" id="profNameInput" name="profName" value="">
+            <input type="hidden" id="uniNameInput" name="uniName" value="">
+            <input type="hidden" id="imageDataInput" name="imageData" value="">
+            <button id="uploadButton" type="button" class="btn btn-primary">Upload</button>
+          </form>
+        </div>
         <script type="text/javascript">
           $(document).ready(function() {
             // Initialize Canvas
@@ -127,38 +161,56 @@
             var $profName = $('#profName')
             var $uniName = $('#uniName')
 
+            var profName = ''
+            var uniName = ''
+
+
             var $loadProfUrl = $('#loadProfUrl')
             var $loadProfButton = $('#loadProfButton')
 
+            var $uploadButton = $('#uploadButton')
+
             $loadProfButton.on('click', function() {
               var profUrl = $loadProfUrl.val()
-
-              console.log(profUrl)
-
               $.ajax({
                 url: profUrl,
                 type: 'GET',
                 crossDomain: true,
                 dataType: 'html',
                 success: function (response) {
+
                   var strippedResponse = response.replace(/src=/gi, 'nosrc=')
                   var $html = $(strippedResponse)
 
                   var titleA = $html.filter('title').text().split(' at ')
-                  var profName = titleA[0]
-                  var uniName = titleA[1].split(' - RateMyProfessors.com')[0]
+                  profName = titleA[0]
+                  uniName = titleA[1].split(' - RateMyProfessors.com')[0]
 
                   $profName.html(profName)
                   $uniName.html(uniName)
-
                 }
               });
             });
-          });
+
+            var $uploadForm = $('#uploadForm')
+            var $profNameInput = $('#profNameInput')
+            var $uniNameInput = $('#uniNameInput')
+            var $imageDataInput = $('#imageDataInput')
+
+            $uploadButton.on('click', function() {
+              $profNameInput.val(profName)
+              $uniNameInput.val(uniName)
+
+              var dataURL = canvas.toDataURL();
+              $imageDataInput.val(dataURL)
+
+              $uploadForm.submit()
+            })
+          })
         </script>
       </div>
       <div id="footer">
-        adfads
+        a
       </div>
     </div>
   </body>
