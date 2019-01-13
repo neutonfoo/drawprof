@@ -1,0 +1,46 @@
+* {
+  margin:0;
+  padding:0;
+}
+
+body {
+  /* min-width: 550px; */
+}
+
+#mainContainer {
+  margin: 0 auto 0 auto;
+  padding-top: 20px;
+  /* background-color: #EEE; */
+}
+
+#profMetaContainer {
+  text-align: center;
+}
+
+#canvasContainer {
+  text-align: center;
+}
+
+#c {
+  /* margin: 10px; */
+  border:1px solid #000;
+}
+
+#colorPickerContainer {
+  text-align: center;
+}
+
+#colorPickerContainer .color {
+  background-color: #FF0000;
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+}
+
+#colorPickerContainer .color:not(:first-child) {
+  margin-left: 5px;
+}
+
+#controlsContainer {
+  text-align: center;
+}

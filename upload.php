@@ -1,9 +1,10 @@
 <?php
+  require('dbconfig.php');
+
   $profName = $_POST['profName'];
   $uniName = $_POST['uniName'];
-  $imageData = $_POST['imageData'];
-
-  require('dbconfig.php');
+  $imageDataUrl = $_POST['imageDataUrl'];
+  $isMobile = $_POST['isMobile'];
 
   // Default
   $uniId = NULL;
@@ -43,13 +44,13 @@
     $profId = $conn->lastInsertId();
   }
 
-  $stmt = $conn->prepare("INSERT INTO drawprof_drawings (profId, publishedDate) VALUES(?, ?)");
-  $stmt->execute([$profId, "Today"]);
+  $stmt = $conn->prepare("INSERT INTO drawprof_drawings (profId, publishedDate, isMobile) VALUES(?, ?, ?)");
+  $stmt->execute([$profId, date("Y-m-d H:i:s"), $isMobile]);
 
   $drawingId = $conn->lastInsertId();
 
   // Save image
-  $data = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $imageData));
+  $data = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $imageDataUrl));
   file_put_contents("drawings/$drawingId.png", $data);
 
   header("Location: drawings.php");
