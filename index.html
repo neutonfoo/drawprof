@@ -35,12 +35,23 @@
     <div id="mainContainer">
       <h1>Eh</h1>
       <div class="">
-        <input type="text" name="" value="" placeholder="http://www.ratemyprofessors.com/ShowRatings.jsp?tid=860888">
-        <input type="button" name="" value="Load">
+        <input type="text" id="loadProfUrl" value="http://www.ratemyprofessors.com/ShowRatings.jsp?tid=860888" placeholder="http://www.ratemyprofessors.com/ShowRatings.jsp?tid=860888">
+        <input type="button" id="loadProfButton" value="Load">
       </div>
       <div id="canvasContainer">
         <canvas id="c" width="500px" height="700px"></canvas>
         <script type="text/javascript">
+          $(document).ready(function() {
+            var $loadProfUrl = $('#loadProfUrl')
+            var $loadProfButton = $('#loadProfButton')
+
+            $loadProfButton.on('click', function() {
+              var profUrl = $loadProfUrl.val()
+              console.log(profUrl)
+            });
+          });
+
+
           var canvas = document.getElementById('c');
           var ctx = canvas.getContext('2d');
 
