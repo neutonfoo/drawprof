@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Eh</title>
+    <script src="jquery-3.3.1.min.js"></script>
+    <style media="screen" type="text/css">
+      * {
+        margin:0;
+        padding:0
+      }
+
+      body {
+        background-color: #DDD;
+      }
+
+      #mainContainer {
+        width: 800px;
+        margin: 50px auto 0 auto;
+        border:1px solid #888;
+        background-color: #FFF;
+      }
+
+      #canvasContainer {
+        text-align: center;
+      }
+
+      #c {
+        margin:0 auto 0 auto;
+          border:1px solid #000;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="mainContainer">
+      <h1>Eh</h1>
+      <div class="">
+        <input type="text" name="" value="" placeholder="http://www.ratemyprofessors.com/ShowRatings.jsp?tid=860888">
+        <input type="button" name="" value="Load">
+      </div>
+      <div id="canvasContainer">
+        <canvas id="c" width="500px" height="700px"></canvas>
+        <script type="text/javascript">
+          var canvas = document.getElementById('c');
+          var ctx = canvas.getContext('2d');
+
+          ctx.strokeStyle = '#FF0000';
+          ctx.lineWidth = 5;
+
+          var drawing = false;
+
+          function getXY(e) {
+            var x, y;
+          	// Get the mouse position relative to the <canvas> element
+          	if (e.layerX || e.layerX == 0) { // Firefox
+          		x = e.layerX;
+          		y = e.layerY;
+          	} else if (e.offsetX || e.offsetX == 0) { // Opera
+          		x = e.offsetX;
+          		y = e.offsetY;
+          	}
+
+            return { x: x, y: y }
+          }
+
+          canvas.addEventListener('mousedown', function(e) {
+            var xy = getXY(e)
+
+            drawing = true;
+
+            ctx.beginPath();
+            ctx.moveTo(xy.x, xy.y);
+
+          }, false);
+
+          canvas.addEventListener('mouseup', function(e) {
+            drawing = false;
+
+            ctx.closePath();
+
+          });
+
+          canvas.addEventListener('mousemove', function(e) {
+            if(drawing == true) {
+              var xy = getXY(e)
+
+              ctx.lineTo(xy.x, xy.y);
+              ctx.stroke();
+            }
+          });
+
+        </script>
+      </div>
+      <div id="footer">
+        adfads
+      </div>
+    </div>
+  </body>
+</html>
