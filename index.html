@@ -43,6 +43,10 @@
         width: 30px;
         height: 30px;
       }
+
+      .color:not(:first-child) {
+        margin-left: 5px;
+      }
     </style>
   </head>
   <body>
@@ -56,24 +60,70 @@
         <h1 id="profName"></h1>
         <h2 id="uniName"></h2>
         <canvas id="c" width="500px" height="700px"></canvas>
-        <div id="colorPickerContainer">
-          <span class="color"></span>
-          <span class="color"></span>
-          <span class="color"></span>
-          <span class="color"></span>
-          <span class="color"></span>
-          <span class="color"></span>
-          <span class="color"></span>
-          <span class="color"></span>
-          <span class="color"></span>
-          <span class="color"></span>
-          <span class="color"></span>
-          <span class="color"></span>
-          <span class="color"></span>
-          <span class="color"></span>
-        </div>
+        <div id="colorPickerContainer"></div>
         <script type="text/javascript">
           $(document).ready(function() {
+            // Initialize Canvas
+            var canvas = document.getElementById('c');
+            var ctx = canvas.getContext('2d');
+
+            ctx.strokeStyle = '#000000';
+            ctx.lineWidth = 5;
+
+            var drawing = false;
+
+            function getXY(e) {
+              var x, y;
+            	// Get the mouse position relative to the <canvas> element
+            	if (e.layerX || e.layerX == 0) { // Firefox
+            		x = e.layerX;
+            		y = e.layerY;
+            	} else if (e.offsetX || e.offsetX == 0) { // Opera
+            		x = e.offsetX;
+            		y = e.offsetY;
+            	}
+
+              return { x: x, y: y }
+            }
+
+            canvas.addEventListener('mousedown', function(e) {
+              var xy = getXY(e)
+
+              drawing = true;
+
+              ctx.beginPath();
+              ctx.moveTo(xy.x, xy.y);
+
+            }, false);
+
+            canvas.addEventListener('mouseup', function(e) {
+              drawing = false;
+
+              ctx.closePath();
+
+            });
+
+            canvas.addEventListener('mousemove', function(e) {
+              if(drawing == true) {
+                var xy = getXY(e)
+
+                ctx.lineTo(xy.x, xy.y);
+                ctx.stroke();
+              }
+            });
+
+            // Initialize Color Picker
+            var $colorPickerContainer = $('#colorPickerContainer')
+            var colors = ['#000000', '#FF0000', '#00FF00', '#0000FF']
+
+            $.each(colors, function(colorIndex, color) {
+              $colorPickerContainer.append(`<span class="color" style="background-color:${ color }" data-colorindex="${ colorIndex }"></span>`)
+            })
+
+            $('.color').on('click', function() {
+              ctx.strokeStyle = colors[$(this).data('colorindex')];
+            })
+
             var $profName = $('#profName')
             var $uniName = $('#uniName')
 
@@ -105,56 +155,6 @@
               });
             });
           });
-
-
-          var canvas = document.getElementById('c');
-          var ctx = canvas.getContext('2d');
-
-          ctx.strokeStyle = '#FF0000';
-          ctx.lineWidth = 5;
-
-          var drawing = false;
-
-          function getXY(e) {
-            var x, y;
-          	// Get the mouse position relative to the <canvas> element
-          	if (e.layerX || e.layerX == 0) { // Firefox
-          		x = e.layerX;
-          		y = e.layerY;
-          	} else if (e.offsetX || e.offsetX == 0) { // Opera
-          		x = e.offsetX;
-          		y = e.offsetY;
-          	}
-
-            return { x: x, y: y }
-          }
-
-          canvas.addEventListener('mousedown', function(e) {
-            var xy = getXY(e)
-
-            drawing = true;
-
-            ctx.beginPath();
-            ctx.moveTo(xy.x, xy.y);
-
-          }, false);
-
-          canvas.addEventListener('mouseup', function(e) {
-            drawing = false;
-
-            ctx.closePath();
-
-          });
-
-          canvas.addEventListener('mousemove', function(e) {
-            if(drawing == true) {
-              var xy = getXY(e)
-
-              ctx.lineTo(xy.x, xy.y);
-              ctx.stroke();
-            }
-          });
-
         </script>
       </div>
       <div id="footer">
