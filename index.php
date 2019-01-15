@@ -1,6 +1,12 @@
 <?php
 require 'requires/core.php';
 showHeader('Home');
+
+if(isset($_GET['logout'])) {
+  ?>
+  <div class="alert alert-success" role="alert">Logout successful.</div>
+  <?php
+}
 ?>
 <!-- Professor URL -->
 <div class="input-group">
@@ -27,8 +33,8 @@ showHeader('Home');
 <!-- Controls Container -->
 <div id="controlsContainer">
   <button id="clearCanvasButton" type="button" class="btn btn-outline-dark">Clear</button>
-  <button id="uploadButton" type="button" class="btn btn-success">Upload</button>
-  <form id="uploadForm" action="upload.php" method="post">
+  <button id="submitButton" type="button" class="btn btn-success">Submit</button>
+  <form id="submitForm" action="submit.php" method="post">
     <input type="hidden" id="profNameInput" name="profName" value="">
     <input type="hidden" id="uniNameInput" name="uniName" value="">
     <input type="hidden" id="isMobileInput" name="isMobile" value="">

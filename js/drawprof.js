@@ -10,7 +10,6 @@ $(document).ready(function() {
   var ctx = canvas.getContext('2d');
 
   ctx.strokeStyle = '#000000';
-  ctx.lineWidth = 5;
 
   var isMobile = false;
 
@@ -52,6 +51,8 @@ $(document).ready(function() {
     }
   }, false);
 
+  ctx.lineWidth = 5;
+
   // Get the position of the mouse relative to the canvas
   function getMousePos(canvasDom, mouseEvent) {
     var rect = canvasDom.getBoundingClientRect();
@@ -65,7 +66,7 @@ $(document).ready(function() {
   canvas.addEventListener("touchstart", function (e) {
     e.preventDefault();
 
-          mousePos = getTouchPos(canvas, e);
+    mousePos = getTouchPos(canvas, e);
     var touch = e.touches[0];
     var mouseEvent = new MouseEvent("mousedown", {
       clientX: touch.clientX,
@@ -101,7 +102,7 @@ $(document).ready(function() {
 
   // Color Picker
   var $colorPickerContainer = $('#colorPickerContainer')
-  var colors = ['#E4E4E4', '#888888', '#222222', '#FDA8D1', '#E20A17', '#E39423', '#9F6A45', '#E4D72F', '#96DE50', '#1DBC20', '#23D3DC', '#1484C5', '#0920E6', '#CE72E2', '#810F7E']
+  var colors = ['#FFFFFF', '#E4E4E4', '#888888', '#222222', '#FDA8D1', '#E20A17', '#E39423', '#9F6A45', '#E4D72F', '#96DE50', '#1DBC20', '#23D3DC', '#1484C5', '#0920E6', '#CE72E2', '#810F7E']
   $.each(colors, function(colorIndex, color) {
     $colorPickerContainer.append(`<span class="color" style="background-color:${ color }" data-colorindex="${ colorIndex }"></span>`)
   })
@@ -162,15 +163,15 @@ $(document).ready(function() {
   })
 
   // Upload button
-  var $uploadForm = $('#uploadForm')
-  var $uploadButton = $('#uploadButton')
+  var $submitForm = $('#submitForm')
+  var $submitButton = $('#submitButton')
 
   var $profNameInput = $('#profNameInput')
   var $uniNameInput = $('#uniNameInput')
   var $imageDataUrlInput = $('#imageDataUrlInput')
   var $isMobileInput = $('#isMobileInput')
 
-  $uploadButton.on('click', function() {
+  $submitButton.on('click', function() {
     if(profName === '' && uniName === '') {
       alert('You have to load a professor via the textbox.')
     } else {
@@ -186,7 +187,7 @@ $(document).ready(function() {
       var imageDataURL = canvas.toDataURL();
       $imageDataUrlInput.val(imageDataURL)
 
-      $uploadForm.submit()
+      $submitForm.submit()
     }
   })
 })

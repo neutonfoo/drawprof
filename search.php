@@ -12,11 +12,23 @@ showHeader($query);
   $stmt = $conn->prepare("SELECT drawprof_profs.profName, drawprof_profs.profSlug, drawprof_unis.uniName, drawprof_unis.uniSlug FROM drawprof_profs LEFT JOIN drawprof_unis ON drawprof_profs.uniId = drawprof_unis.uniId WHERE profName LIKE ? ORDER BY uniName DESC");
   $stmt->execute(['%'.$query.'%']);
 
-  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-    $profName = $row['profName'];
-    $profSlug = $row['profSlug'];
+  if($stmt->rowCount() == 0) {
     ?>
-    <a href="drawing.php?prof=" class="list-group-item list-group-item-action"><?=$profName; ?></a>
+    <p>No results found.</p>
+    <?php
+  } else {
+    ?>
+    <div class="list-group">
+    <?php
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $profName = $row['profName'];
+      $profSlug = $row['profSlug'];
+      ?>
+      <a href="drawing.php?prof=" class="list-group-item list-group-item-action"><?=$profName; ?></a>
+      <?php
+    }
+    ?>
+    </div>
     <?php
   }
 ?>
@@ -26,11 +38,23 @@ showHeader($query);
   $stmt = $conn->prepare("SELECT uniName, uniSlug FROM drawprof_unis WHERE uniName LIKE ? ORDER BY uniName DESC");
   $stmt->execute(['%'.$query.'%']);
 
-  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-    $uniSlug = $row['uniSlug'];
-    $uniName = $row['uniName'];
+  if($stmt->rowCount() == 0) {
     ?>
-    <a href="drawing.php?uni=<?=$uniSlug?>" class="list-group-item list-group-item-action"><?=$uniName; ?></a>
+    <p>No results found.</p>
+    <?php
+  } else {
+    ?>
+    <div class="list-group">
+    <?php
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $uniSlug = $row['uniSlug'];
+      $uniName = $row['uniName'];
+      ?>
+      <a href="drawing.php?uni=<?=$uniSlug?>" class="list-group-item list-group-item-action"><?=$uniName; ?></a>
+      <?php
+    }
+    ?>
+  </div>
     <?php
   }
 ?>

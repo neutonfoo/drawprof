@@ -1,2 +1,4 @@
 .DS_Store
 dbconfig.php
+env.php
+drawings/*

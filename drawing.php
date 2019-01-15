@@ -36,30 +36,41 @@ if(!is_null($drawingId)) {
 
     $drawingFilename = "$uniSlug-$profSlug-$drawingId.png";
 
-    $link = $actual_link = "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+    $link = $base_url . "drawing.php?drawing=$drawingId";
 
-    if($approvalStatus == 0) {
+    if($approvalStatus == 1) {
+      // If Approved, redirect to clean URL
       ?>
-      <div class="alert alert-dark" role="alert">This post is pending approval.</div>
-      <div class="alert alert-dark" role="alert">Use this link to check on its status: <a href="<?=$link; ?>"><?=$link; ?></a>.</div>
+      <div class="alert alert-info" role="alert">NEED TO REDIRECT</div>
+      <?php
+    } else if($approvalStatus == 0) {
+      ?>
+      <div class="alert alert-info" role="alert">This submission is pending approval.</div>
+      <div class="alert alert-info" role="alert">Use this link to check on its status: <a href="<?=$link; ?>"><?=$link; ?></a>.</div>
       <?php
     } else if($approvalStatus == 2) {
       ?>
-      <div class="alert alert-danger" role="alert">This post has been rejected.</div>
+      <div class="alert alert-danger" role="alert">This submission has been rejected.</div>
+      <?php
+    } else if($approvalStatus == 3) {
+      ?>
+      <div class="alert alert-danger" role="alert">This submission has been removed for being unwholesome.</div>
       <?php
     }
-    ?>
 
-    <!-- Professor Meta Container -->
-    <div class="profMetaContainer">
-      <h2 class="profName"><?=$profName; ?></h2>
-      <h3 class="uniName"><?=$uniName; ?></h3>
-    </div>
-    <!-- Canvas Container -->
-    <div class="drawingContainer">
-      <img class="d" src="drawings/<?=$drawingFilename; ?>">
-    </div>
-    <?php
+    if($approvalStatus != 3) {
+      ?>
+      <!-- Professor Meta Container -->
+      <div class="profMetaContainer">
+        <h2 class="profName"><?=$profName; ?></h2>
+        <h3 class="uniName"><?=$uniName; ?></h3>
+      </div>
+      <!-- Canvas Container -->
+      <div class="drawingContainer">
+        <img class="d" src="drawings/<?=$drawingFilename; ?>">
+      </div>
+      <?php
+    }
   }
 }
 ?>

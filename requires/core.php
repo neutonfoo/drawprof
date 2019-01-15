@@ -5,6 +5,7 @@ session_start();
 require 'env.php';
 
 function showHeader($title) {
+  global $base_url;
   ?>
   <!DOCTYPE html>
   <html lang="en" dir="ltr">
@@ -30,11 +31,14 @@ function showHeader($title) {
               <a class="nav-link" href="howto.php">How To</a>
             </li> -->
             <li class="nav-item">
-              <a class="nav-link" href="gallery.php">Gallery</a>
+              <a class="nav-link" href="gallery.php?sort=top">Top</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="gallery.php?sort=recent">Recent</a>
             </li>
           </ul>
           <form class="form-inline" action="search.php" method="GET">
-            <input name="query" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+            <input name="query" class="form-control mr-sm-2" type="search" placeholder="University or Professor" aria-label="Search" size="22">
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
           </form>
         </div>
@@ -47,6 +51,7 @@ function showHeader($title) {
 }
 
 function showFooter() {
+  global $base_url;
   ?>
           </div>
         </div>
@@ -54,16 +59,26 @@ function showFooter() {
           <footer class="mt-3 mb-3 pt-3 pb-2 border-top">
             <div class="row">
               <div class="col-12 text-center">
-                &copy; 2019 DrawProf
-                &bull;
-                <a href="#">About</a>
-                &bull;
-                <a href="#">Contact</a>
-                &bull;
-                <a href="https://devpost.com/software/drawprof">DevPost</a>
-                &bull;
-                <a href="admin.php">Admin</a>
+                <span class="p-1">&copy; 2019 DrawProf</span>
+                <span class="mx-2">&bull;</span>
+                <a href="<?=$base_url . 'about.php'; ?>" class="p-1">About</a>
+                <span class="mx-2">&bull;</span>
+                <a href="<?=$base_url . 'contact.php'; ?>" class="p-1">Contact</a>
+                <!-- <span class="mx-2">&bull;</span>
+                <a href="https://devpost.com/software/drawprof" class="p-1">DevPost</a> -->
+                <span class="mx-2">&bull;</span>
+                <a href="admin.php" class="p-1<?php if(isset($_SESSION['adminId'])) {?> bg-dark text-white<?php  } ?>">Admin</a>
+                <?php
+                // If logged in
+                if(isset($_SESSION['adminId'])) {
+                  ?>
+                  <span class="mx-2">&bull;</span>
+                  <a href="login.php?logout=1" class="p-1 bg-warning text-dark">Logout</a>
+                <?php
+                }
+                ?>
               </div>
+            </div>
           </footer>
         </div>
       </div>

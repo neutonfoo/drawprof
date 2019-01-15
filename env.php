@@ -1,3 +1,4 @@
 <?php
 
-$base_url = "a";
+  // Include trailing slash
+  $base_url = "http://localhost/drawprof/";
