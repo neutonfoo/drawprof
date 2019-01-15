@@ -120,8 +120,8 @@ $(document).ready(function() {
   var profName = ''
   var uniName = ''
 
-  var $profName = $('#profName')
-  var $uniName = $('#uniName')
+  var $profName = $('.profName')
+  var $uniName = $('.uniName')
 
   var $loadProfUrl = $('#loadProfUrl')
   var $loadProfButton = $('#loadProfButton')
@@ -178,9 +178,9 @@ $(document).ready(function() {
       $uniNameInput.val(uniName)
 
       if(isMobile == true) {
-        $isMobileInput.val('T')
+        $isMobileInput.val(1)
       } else if(isMobile == false) {
-        $isMobileInput.val('F')
+        $isMobileInput.val(0)
       }
 
       var imageDataURL = canvas.toDataURL();

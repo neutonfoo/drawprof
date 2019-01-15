@@ -1,6 +1,15 @@
 <?php
-  require('dbconfig.php');
+  require 'dbconfig.php';
 
+  // Slug function for filename
+  function slug($z){
+    $z = strtolower($z);
+    $z = preg_replace('/[^a-z0-9 -]+/', '', $z);
+    $z = str_replace(' ', '-', $z);
+    return trim($z, '-');
+  }
+
+  // Get POST values
   $profName = $_POST['profName'];
   $uniName = $_POST['uniName'];
   $imageDataUrl = $_POST['imageDataUrl'];
@@ -8,49 +17,56 @@
 
   // Default
   $uniId = NULL;
+  $uniSlug = NULL;
   $profId = NULL;
+  $profSlug = NULL;
 
-  // Open connection
-  $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
-  $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-  $stmt = $conn->prepare("SELECT uniId FROM drawprof_unis WHERE uniName = ?");
+  // Get university
+  $stmt = $conn->prepare("SELECT uniId, uniSlug FROM drawprof_unis WHERE uniName = ?");
   $stmt->execute([$uniName]);
 
   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $uniId = $row['uniId'];
+    $uniSlug = $row['uniSlug'];
   }
 
   // No university
   if(is_null($uniId)) {
-    $stmt = $conn->prepare("INSERT INTO drawprof_unis (uniName) VALUES(?)");
-    $stmt->execute([$uniName]);
+    $uniSlug = slug($uniName);
+
+    $stmt = $conn->prepare("INSERT INTO drawprof_unis (uniName, uniSlug) VALUES(?,?)");
+    $stmt->execute([$uniName, $uniSlug]);
 
     $uniId = $conn->lastInsertId();
   }
 
-  $stmt = $conn->prepare("SELECT profId FROM drawprof_profs WHERE (uniId = ? AND profName = ?)");
+  // Get professor
+  $stmt = $conn->prepare("SELECT profId, profSlug FROM drawprof_profs WHERE (uniId = ? AND profName = ?)");
   $stmt->execute([$uniId, $profName]);
 
   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $profId = $row['profId'];
+    $profSlug = $row['profSlug'];
   }
 
   // No professor
   if(is_null($profId)) {
-    $stmt = $conn->prepare("INSERT INTO drawprof_profs (uniId, profName) VALUES(?, ?)");
-    $stmt->execute([$uniId, $profName]);
+    $profSlug = slug($profName);
+
+    $stmt = $conn->prepare("INSERT INTO drawprof_profs (uniId, profName, profSlug) VALUES(?, ?, ?)");
+    $stmt->execute([$uniId, $profName, $profSlug]);
 
     $profId = $conn->lastInsertId();
   }
 
-  $stmt = $conn->prepare("INSERT INTO drawprof_drawings (profId, publishedDate, isMobile) VALUES(?, ?, ?)");
+  // Insert drawing
+  $stmt = $conn->prepare("INSERT INTO drawprof_drawings (profId, publishedDate, isMobile, approvalStatus) VALUES(?, ?, ?, 0)");
   $stmt->execute([$profId, date("Y-m-d H:i:s"), $isMobile]);
 
   $drawingId = $conn->lastInsertId();
 
   // Save image
   $data = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $imageDataUrl));
-  file_put_contents("drawings/$drawingId.png", $data);
+  file_put_contents("drawings/$uniSlug-$profSlug-$drawingId.png", $data);
 
-  header("Location: drawings.php");
+  header("Location: drawing.php?drawing=$drawingId");

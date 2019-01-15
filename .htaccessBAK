@@ -1,0 +1,7 @@
+RewriteEngine On
+RewriteRule ^([a-z0-9\-]+)$ drawing.php?uniId=$1
+RewriteRule ^([a-z0-9\-]+)/$ drawing.php?uniId=$1
+RewriteRule ^([a-z0-9\-]+)/([a-z0-9\-]+)$ drawing.php?uniId=$1&profId=$2
+RewriteRule ^([a-z0-9\-]+)/([a-z0-9\-]+)/$ drawing.php?uniId=$1&profId=$2
+RewriteRule ^([a-z0-9\-]+)/([a-z0-9\-]+)/drawing-([0-9]+)$ drawing.php?drawingId=$3
+RewriteRule ^([a-z0-9\-]+)/([a-z0-9\-]+)/drawing-([0-9]+)/$ drawing.php?drawingId=$3
