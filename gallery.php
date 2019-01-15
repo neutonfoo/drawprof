@@ -8,7 +8,7 @@ showHeader('Gallery');
 <div class="form-row">
 <?php
 
-$stmt = $conn->prepare("SELECT drawingId, publishedDate, isMobile, profName, profSlug, uniName, uniSlug FROM drawprof_drawings, drawprof_unis, drawprof_profs WHERE drawprof_drawings.approvalStatus = 2 AND drawprof_drawings.profId = drawprof_profs.profId AND drawprof_profs.uniId = drawprof_unis.uniId ORDER BY drawingId DESC LIMIT 12");
+$stmt = $conn->prepare("SELECT drawingId, publishedDate, isMobile, profName, profSlug, uniName, uniSlug FROM drawprof_drawings, drawprof_unis, drawprof_profs WHERE drawprof_drawings.approvalStatus = 1 AND drawprof_drawings.profId = drawprof_profs.profId AND drawprof_profs.uniId = drawprof_unis.uniId ORDER BY drawingId DESC LIMIT 12");
 $stmt->execute();
 
 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
