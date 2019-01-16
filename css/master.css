@@ -26,6 +26,11 @@ body {
   border:3px double #000;
 }
 
+.drawingContainer img {
+  width:100%;
+  max-width: 500px;
+}
+
 #colorPickerContainer {
   text-align: center;
 }

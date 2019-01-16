@@ -51,11 +51,3 @@ if(isset($_GET['logout'])) {
 
   header("Location: index.php");
 }
-
-//
-// $stmt = $conn->prepare("SELECT drawprof_profs.profName, drawprof_profs.profSlug, drawprof_unis.uniName, drawprof_unis.uniSlug FROM drawprof_profs LEFT JOIN drawprof_unis ON drawprof_profs.uniId = drawprof_unis.uniId WHERE profName LIKE ? ORDER BY uniName DESC");
-// $stmt->execute(['%'.$query.'%']);
-//
-// while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-//
-// }

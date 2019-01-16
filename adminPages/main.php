@@ -1,7 +1,6 @@
 <?php
 showHeader('Admin Panel');
 ?>
-<div class="alert alert-success" role="alert">Logged in as <strong><?=$_SESSION['adminName']; ?></strong> (<?=$_SESSION['adminEmail']; ?>).</div>
 <h1>Admin Panel</h1>
 <div class="row">
   <div class="col-md-6">

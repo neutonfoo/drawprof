@@ -30,9 +30,9 @@ function showHeader($title) {
             <!-- <li class="nav-item">
               <a class="nav-link" href="howto.php">How To</a>
             </li> -->
-            <li class="nav-item">
+            <!-- <li class="nav-item">
               <a class="nav-link" href="gallery.php?sort=top">Top</a>
-            </li>
+            </li> -->
             <li class="nav-item">
               <a class="nav-link" href="gallery.php?sort=recent">Recent</a>
             </li>
@@ -48,6 +48,11 @@ function showHeader($title) {
         <div class="row">
           <div id="mainContainer" class="col">
   <?php
+  if(isset($_SESSION['adminId'])) {
+    ?>
+    <div class="alert alert-success" role="alert">Logged in as <strong><?=$_SESSION['adminName']; ?></strong> (<?=$_SESSION['adminEmail']; ?>).</div>
+    <?php
+  }
 }
 
 function showFooter() {
@@ -85,4 +90,14 @@ function showFooter() {
     </body>
   </html>
   <?php
+}
+
+function isSuperAdmin() {
+  if(isset($_SESSION['adminIsSuperAdmin'])) {
+    if($_SESSION['adminIsSuperAdmin'] == 1) {
+      return true;
+    }
+  }
+
+  return false;
 }

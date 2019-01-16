@@ -5,9 +5,9 @@ if(isset($_POST['formSubmit'])) {
 
   $drawings = $_POST['drawings'];
 
-  foreach($drawings as $drawingId => $approvalStatus) {
-    $stmt = $conn->prepare("UPDATE drawprof_drawings SET approvalStatus = ? WHERE drawingId = ?");
-    $stmt->execute([$approvalStatus, $drawingId]);
+  foreach($drawings as $drawingId => $status) {
+    $stmt = $conn->prepare("UPDATE drawprof_drawings SET status = ? WHERE drawingId = ?");
+    $stmt->execute([$status, $drawingId]);
   }
 }
 
@@ -16,7 +16,7 @@ if(isset($_POST['formSubmit'])) {
 <p class="lead">Approve or reject pending submissions here. Submissions marked as <mark>unwholesome</mark> will be hidden.</p>
 <form method="post">
 <?php
-$stmt = $conn->prepare("SELECT drawingId, profName, profSlug, uniName, uniSlug FROM drawprof_drawings JOIN drawprof_profs ON drawprof_drawings.profId = drawprof_profs.profId JOIN drawprof_unis ON drawprof_profs.uniId = drawprof_unis.uniId WHERE drawprof_drawings.approvalStatus = 0 ORDER BY drawingId ASC LIMIT 12");
+$stmt = $conn->prepare("SELECT drawingId, profName, profSlug, uniName, uniSlug FROM drawprof_drawings JOIN drawprof_profs ON drawprof_drawings.profId = drawprof_profs.profId JOIN drawprof_unis ON drawprof_profs.uniId = drawprof_unis.uniId WHERE drawprof_drawings.status = 0 ORDER BY drawingId ASC LIMIT 12");
 $stmt->execute();
 
 if ($stmt->rowCount() == 0) {
@@ -36,7 +36,6 @@ if ($stmt->rowCount() == 0) {
 
     $drawingFilename = "$uniSlug-$profSlug-$drawingId.png";
     ?>
-
       <div class="col-xs-12 col-sm-6 col-md-3 col-lg-2">
         <div class="card my-2">
           <img src="drawings/<?=$drawingFilename; ?>" class="card-img-top" alt="...">

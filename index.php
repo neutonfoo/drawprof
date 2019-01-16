@@ -32,11 +32,24 @@ if(isset($_GET['logout'])) {
 
 <!-- Controls Container -->
 <div id="controlsContainer">
-  <button id="clearCanvasButton" type="button" class="btn btn-outline-dark">Clear</button>
-  <button id="submitButton" type="button" class="btn btn-success">Submit</button>
+  <div class="row">
+    <div class="col-3"></div>
+    <div class="col-2">
+      <button id="clearCanvasButton" type="button" class="btn btn-outline-dark">Clear</button>
+    </div>
+    <div class="col-4">
+      <div class="input-group">
+        <input type="text" class="form-control" id="artistName" placeholder="Artist Name" size="10">
+          <div class="input-group-append">
+            <button id="submitButton" type="button" class="btn btn-success">Submit</button>
+          </div>
+      </div>
+    </div>
+    <div class="col-3"></div>
+  </div>
   <form id="submitForm" action="submit.php" method="post">
-    <input type="hidden" id="profNameInput" name="profName" value="">
-    <input type="hidden" id="uniNameInput" name="uniName" value="">
+    <input type="hidden" id="profUrlInput" name="profUrl" value="">
+    <input type="hidden" id="artistNameInput" name="artistName" value="">
     <input type="hidden" id="isMobileInput" name="isMobile" value="">
     <input type="hidden" id="imageDataUrlInput" name="imageDataUrl" value="">
   </form>

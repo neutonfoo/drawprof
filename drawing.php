@@ -9,11 +9,11 @@ $profSlug = NULL;
 $drawingId = NULL;
 
 if(isset($_GET['uni'])) {
-  $uniSlug = $_GET['uni'];
+  $uniId = $_GET['uni'];
 }
 
 if(isset($_GET['prof'])) {
-  $profSlug = $_GET['prof'];
+  $profId = $_GET['prof'];
 }
 
 if(isset($_GET['drawing'])) {
@@ -22,12 +22,13 @@ if(isset($_GET['drawing'])) {
 
 // Specific Drawing
 if(!is_null($drawingId)) {
-  $stmt = $conn->prepare("SELECT drawingId, approvalStatus, profName, profSlug, uniName, uniSlug FROM drawprof_drawings JOIN drawprof_profs ON drawprof_drawings.profId = drawprof_profs.profId JOIN drawprof_unis ON drawprof_profs.uniId = drawprof_unis.uniId WHERE drawprof_drawings.drawingId = ?");
+  $stmt = $conn->prepare("SELECT drawingId, artist, status, profName, profSlug, uniName, uniSlug FROM drawprof_drawings JOIN drawprof_profs ON drawprof_drawings.profId = drawprof_profs.profId JOIN drawprof_unis ON drawprof_profs.uniId = drawprof_unis.uniId WHERE drawprof_drawings.drawingId = ?");
   $stmt->execute([$drawingId]);
 
   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $drawingId = $row['drawingId'];
-    $approvalStatus = $row['approvalStatus'];
+    $artist = $row['artist'];
+    $status = $row['status'];
 
     $profName = $row['profName'];
     $profSlug = $row['profSlug'];
@@ -38,27 +39,24 @@ if(!is_null($drawingId)) {
 
     $link = $base_url . "drawing.php?drawing=$drawingId";
 
-    if($approvalStatus == 1) {
+    if($status == 1) {
       // If Approved, redirect to clean URL
-      ?>
-      <div class="alert alert-info" role="alert">NEED TO REDIRECT</div>
-      <?php
-    } else if($approvalStatus == 0) {
+    } else if($status == 0) {
       ?>
       <div class="alert alert-info" role="alert">This submission is pending approval.</div>
       <div class="alert alert-info" role="alert">Use this link to check on its status: <a href="<?=$link; ?>"><?=$link; ?></a>.</div>
       <?php
-    } else if($approvalStatus == 2) {
+    } else if($status == 2) {
       ?>
       <div class="alert alert-danger" role="alert">This submission has been rejected.</div>
       <?php
-    } else if($approvalStatus == 3) {
+    } else if($status == 3) {
       ?>
       <div class="alert alert-danger" role="alert">This submission has been removed for being unwholesome.</div>
       <?php
     }
 
-    if($approvalStatus != 3) {
+    if($status != 3 || isSuperAdmin()) {
       ?>
       <!-- Professor Meta Container -->
       <div class="profMetaContainer">
@@ -69,10 +67,58 @@ if(!is_null($drawingId)) {
       <div class="drawingContainer">
         <img class="d" src="drawings/<?=$drawingFilename; ?>">
       </div>
+
+      <div class="row">
+        <div class="col text-center">
+          Drawing by <u><?=$artist; ?></u>.
+        </div>
+      </div>
       <?php
     }
+
+    /*
+    if(isSuperAdmin()) {
+      ?>
+      <div class="row">
+        <div class="col-4"></div>
+          <div class="col-4">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="drawings[<?=$drawingId; ?>]" id="drawing_<?=$drawingId; ?>_approve" value="1" checked>
+              <label class="form-check-label" for="drawing_<?=$drawingId; ?>_approve">
+                Approve
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="drawings[<?=$drawingId; ?>]" id="drawing_<?=$drawingId; ?>_reject" value="2">
+              <label class="form-check-label" for="drawing_<?=$drawingId; ?>_reject">
+                Reject
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="drawings[<?=$drawingId; ?>]" id="drawing_<?=$drawingId; ?>_pending" value="0">
+              <label class="form-check-label" for="drawing_<?=$drawingId; ?>_pending">
+                Pending
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="drawings[<?=$drawingId; ?>]" id="drawing_<?=$drawingId; ?>_unwholesome" value="3">
+              <label class="form-check-label" for="drawing_<?=$drawingId; ?>_unwholesome">
+                Unwholesome
+              </label>
+            </div>
+            <button type="submit" class="btn btn-primary">- V E T O -</button>
+        </div>
+        <div class="col-4"></div>
+      </div>
+
+      <?php
+    }
+    */
   }
+} else if(!is_null($profId)) {
+  // Professor Filter
+  $stmt = $conn->prepare("SELECT drawingId, status, profName, profSlug, uniName, uniSlug FROM drawprof_drawings JOIN drawprof_profs ON drawprof_drawings.profId = drawprof_profs.profId JOIN drawprof_unis ON drawprof_profs.uniId = drawprof_unis.uniId WHERE drawprof_drawings.drawingId = ?");
+  $stmt->execute([$drawingId]);
+
 }
-?>
-<?php
 showFooter();

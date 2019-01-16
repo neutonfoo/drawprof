@@ -9,8 +9,6 @@ $(document).ready(function() {
   var canvas = document.getElementById('c');
   var ctx = canvas.getContext('2d');
 
-  ctx.strokeStyle = '#000000';
-
   var isMobile = false;
 
   // If Mobile
@@ -50,8 +48,6 @@ $(document).ready(function() {
       ctx.stroke();
     }
   }, false);
-
-  ctx.lineWidth = 5;
 
   // Get the position of the mouse relative to the canvas
   function getMousePos(canvasDom, mouseEvent) {
@@ -100,6 +96,10 @@ $(document).ready(function() {
     };
   }
 
+  // Initialize vars
+  ctx.strokeStyle = '#000000';
+  ctx.lineWidth = 5;
+
   // Color Picker
   var $colorPickerContainer = $('#colorPickerContainer')
   var colors = ['#FFFFFF', '#E4E4E4', '#888888', '#222222', '#FDA8D1', '#E20A17', '#E39423', '#9F6A45', '#E4D72F', '#96DE50', '#1DBC20', '#23D3DC', '#1484C5', '#0920E6', '#CE72E2', '#810F7E']
@@ -118,6 +118,7 @@ $(document).ready(function() {
   })
 
   // Other
+  var profUrl = ''
   var profName = ''
   var uniName = ''
 
@@ -129,13 +130,14 @@ $(document).ready(function() {
 
   // $loadProfButton
   $loadProfButton.on('click', function() {
-    var profUrl = $loadProfUrl.val()
+    profUrl = $loadProfUrl.val()
 
     if(profUrl.substring(0, 48) != 'http://ratemyprofessors.com/ShowRatings.jsp?tid='
     && profUrl.substring(0, 49) != 'https://ratemyprofessors.com/ShowRatings.jsp?tid='
     && profUrl.substring(0, 52) != 'http://www.ratemyprofessors.com/ShowRatings.jsp?tid='
     && profUrl.substring(0, 53) != 'https://www.ratemyprofessors.com/ShowRatings.jsp?tid='
   ) {
+      profUrl = ''
       alert('The url must start with:\n"http://www.ratemyprofessors.com/ShowRatings.jsp?tid=" or\n"https://www.ratemyprofessors.com/ShowRatings.jsp?tid=".')
     } else {
         $.ajax({
@@ -150,10 +152,10 @@ $(document).ready(function() {
           if(response == 'Rate My Professors -  Review Teachers and Professors, School Reviews, College Campus Ratings') {
             alert('Not a valid URL.')
           } else {
-            var titleSections = response.split(' at ')
+            var titleSections = response.split('|')
 
             profName = titleSections[0]
-            uniName = titleSections[1].split(' - RateMyProfessors.com')[0]
+            uniName = titleSections[1]
 
             $profName.html(profName)
             $uniName.html(uniName)
@@ -165,18 +167,19 @@ $(document).ready(function() {
   // Upload button
   var $submitForm = $('#submitForm')
   var $submitButton = $('#submitButton')
+  var $artistName = $('#artistName')
 
-  var $profNameInput = $('#profNameInput')
-  var $uniNameInput = $('#uniNameInput')
+  var $profUrlInput = $('#profUrlInput')
+  var $artistNameInput = $('#artistNameInput')
   var $imageDataUrlInput = $('#imageDataUrlInput')
   var $isMobileInput = $('#isMobileInput')
 
   $submitButton.on('click', function() {
-    if(profName === '' && uniName === '') {
-      alert('You have to load a professor via the textbox.')
+    if(profUrl === '' || profName === '' || uniName === '') {
+      alert('You have to load a professor before submitting.')
     } else {
-      $profNameInput.val(profName)
-      $uniNameInput.val(uniName)
+      $profUrlInput.val(profUrl)
+      $artistNameInput.val($artistName.val())
 
       if(isMobile == true) {
         $isMobileInput.val(1)

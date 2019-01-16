@@ -1,8 +1,9 @@
 <?php
   require 'dbconfig.php';
+  require 'profGetter.php';
 
   // Slug function for filename
-  function slug($z){
+  function slug($z) {
     $z = strtolower($z);
     $z = preg_replace('/[^a-z0-9 -]+/', '', $z);
     $z = str_replace(' ', '-', $z);
@@ -10,10 +11,15 @@
   }
 
   // Get POST values
-  $profName = $_POST['profName'];
-  $uniName = $_POST['uniName'];
+  $profUrl = $_POST['profUrl'];
+  $artist = $_POST['artistName'];
   $imageDataUrl = $_POST['imageDataUrl'];
   $isMobile = $_POST['isMobile'];
+
+  // Get Prof Name
+  $profMeta = explode("|", getProfMeta($profUrl));
+  $profName = $profMeta[0];
+  $uniName = $profMeta[1];
 
   // Default
   $uniId = NULL;
@@ -60,8 +66,8 @@
   }
 
   // Insert drawing
-  $stmt = $conn->prepare("INSERT INTO drawprof_drawings (profId, publishedDate, isMobile, approvalStatus) VALUES(?, ?, ?, 0)");
-  $stmt->execute([$profId, date("Y-m-d H:i:s"), $isMobile]);
+  $stmt = $conn->prepare("INSERT INTO drawprof_drawings (profId, artist, submittedTime, isMobile, status, statusChangeAdminId, statusChangeTime) VALUES(?, ?, ?, ?, 0, 0, 0)");
+  $stmt->execute([$profId, $artist, time(), $isMobile]);
 
   $drawingId = $conn->lastInsertId();
 
