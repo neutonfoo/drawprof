@@ -31,6 +31,10 @@ if(!isset($_SESSION['adminId'])) {
       // Create Admin Account
       require 'adminPages/createadminaccount.php';
 
+    } else if($page == "manageadminaccounts") {
+      // Create Admin Account
+      require 'adminPages/manageadminaccounts.php';
+
     } else if($page == "todo") {
       // Todo list
       require 'adminPages/todo.php';

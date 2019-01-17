@@ -6,6 +6,7 @@ require 'env.php';
 
 function showHeader($title) {
   global $base_url;
+  global $show_analytics;
   ?>
   <!DOCTYPE html>
   <html lang="en" dir="ltr">
@@ -17,6 +18,24 @@ function showHeader($title) {
       <script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
       <script type="text/javascript" src="js/bootstrap.min.js"></script>
       <link rel="stylesheet" href="css/master.css">
+
+      <?php
+        if($show_analytics) {
+          ?>
+          <!-- Global site tag (gtag.js) - Google Analytics -->
+          <script async src="https://www.googletagmanager.com/gtag/js?id=UA-132697667-2"></script>
+          <script>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+
+          gtag('config', 'UA-132697667-2');
+        </script>
+
+          <?php
+        }
+      ?>
+
     </head>
     <body>
       <!-- Navigation Bar -->
@@ -27,12 +46,6 @@ function showHeader($title) {
         </button>
         <div class="collapse navbar-collapse" id="collapsibleNavbar">
           <ul class="navbar-nav mr-auto">
-            <!-- <li class="nav-item">
-              <a class="nav-link" href="howto.php">How To</a>
-            </li> -->
-            <!-- <li class="nav-item">
-              <a class="nav-link" href="gallery.php?sort=top">Top</a>
-            </li> -->
             <li class="nav-item">
               <a class="nav-link" href="gallery.php?sort=recent">Recent</a>
             </li>
@@ -43,14 +56,27 @@ function showHeader($title) {
           </form>
         </div>
       </nav>
+
       <!-- Main Container -->
       <div class="container-fluid">
-        <div class="row">
-          <div id="mainContainer" class="col">
+        <div class="row pt-3">
+          <div class="col">
+            <!-- Main Alert -->
+            <div class="alert alert-info" role="alert">
+              <div class="h4 alert-heading">Closed Beta</div>
+              <p class="mb-0">DrawProf is currently in Closed Beta. Please do not share this link.</p>
+                <!-- You can send all bug reports to our email <a href="mailto:drawprof@salhacks.com?Subject=About%DrawProf" class="alert-link ">drawprof@salhacks.com</a>. -->
+            </div>
+          </div>
+        </div>
   <?php
   if(isset($_SESSION['adminId'])) {
     ?>
-    <div class="alert alert-success" role="alert">Logged in as <strong><?=$_SESSION['adminName']; ?></strong> (<?=$_SESSION['adminEmail']; ?>).</div>
+    <div class="row">
+      <div class="col">
+        <div class="alert alert-success" role="alert">Logged in as <strong><?=$_SESSION['adminName']; ?></strong> (<?=$_SESSION['adminEmail']; ?>).</div>
+      </div>
+    </div>
     <?php
   }
 }
@@ -58,34 +84,30 @@ function showHeader($title) {
 function showFooter() {
   global $base_url;
   ?>
-          </div>
-        </div>
-        <div id="footerContainer">
-          <footer class="mt-3 mb-3 pt-3 pb-2 border-top">
-            <div class="row">
-              <div class="col-12 text-center">
-                <span class="p-1">&copy; 2019 DrawProf</span>
-                <span class="mx-2">&bull;</span>
-                <a href="<?=$base_url . 'about.php'; ?>" class="p-1">About</a>
-                <span class="mx-2">&bull;</span>
-                <a href="<?=$base_url . 'contact.php'; ?>" class="p-1">Contact</a>
-                <!-- <span class="mx-2">&bull;</span>
-                <a href="https://devpost.com/software/drawprof" class="p-1">DevPost</a> -->
-                <span class="mx-2">&bull;</span>
-                <a href="admin.php" class="p-1<?php if(isset($_SESSION['adminId'])) {?> bg-dark text-white<?php  } ?>">Admin</a>
-                <?php
-                // If logged in
-                if(isset($_SESSION['adminId'])) {
-                  ?>
-                  <span class="mx-2">&bull;</span>
-                  <a href="login.php?logout=1" class="p-1 bg-warning text-dark">Logout</a>
-                <?php
-                }
+        <footer class="mt-3 mb-3 pt-3 pb-1 border-top">
+          <div class="row">
+            <div class="col-12 text-center">
+              <span class="p-1">&copy; 2019 DrawProf</span>
+              <span class="mx-2">&bull;</span>
+              <a href="<?=$base_url . 'about.php'; ?>" class="p-1">About</a>
+              <span class="mx-2">&bull;</span>
+              <a href="<?=$base_url . 'contact.php'; ?>" class="p-1">Contact</a>
+              <!-- <span class="mx-2">&bull;</span>
+              <a href="https://devpost.com/software/drawprof" class="p-1">DevPost</a> -->
+              <span class="mx-2">&bull;</span>
+              <a href="admin.php" class="p-1<?php if(isset($_SESSION['adminId'])) {?> bg-dark text-white<?php  } ?>">Admin</a>
+              <?php
+              // If logged in
+              if(isset($_SESSION['adminId'])) {
                 ?>
-              </div>
+                <span class="mx-2">&bull;</span>
+                <a href="login.php?logout=1" class="p-1 bg-warning text-dark">Logout</a>
+              <?php
+              }
+              ?>
             </div>
-          </footer>
-        </div>
+          </div>
+        </footer>
       </div>
     </body>
   </html>
@@ -100,4 +122,9 @@ function isSuperAdmin() {
   }
 
   return false;
+}
+
+function parseTimestamp($timestamp) {
+  return date("F j, Y, g:i a", $timestamp);
+  // return gmdate("Y-m-d\TH:i:s\Z", $timestamp);
 }

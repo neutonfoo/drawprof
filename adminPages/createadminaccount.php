@@ -12,8 +12,8 @@ if(isset($_POST['formSubmit'])) {
     $adminIsSuperAdminInput = 1;
   }
 
-  $stmt = $conn->prepare("INSERT INTO drawprof_admins (adminName, email, passwordHash, isSuperAdmin) VALUES (?,?,?,?)");
-  $stmt->execute([$adminName, $adminEmail, md5($adminPassword), $adminIsSuperAdminInput]);
+  $stmt = $conn->prepare("INSERT INTO drawprof_admins (timeCreated, adminName, email, passwordHash, isSuperAdmin, parentAdminId) VALUES (?,?,?,?,?,?)");
+  $stmt->execute([time(), $adminName, $adminEmail, md5($adminPassword), $adminIsSuperAdminInput, $_SESSION['adminId']]);
 
   ?>
   <div class="alert alert-success" role="alert">
@@ -22,40 +22,51 @@ if(isset($_POST['formSubmit'])) {
   <?php
 }
 ?>
-<h1><a href="?">AP</a> &bull; Create Admin Account</h1>
-<form method="POST">
-  <div class="form-row">
-    <div class="form-group col-md-12">
-      <label for="adminNameInput">Full Name</label>
-      <input type="text" class="form-control" id="adminNameInput" name="adminName" placeholder="Enter name">
-    </div>
+
+<div class="row">
+  <div class="col">
+    <h1><a href="?">AP</a> &bull; Create Admin Account</h1>
   </div>
-  <div class="form-row">
-    <div class="form-group col-md-6">
-      <label for="adminEmailInput">Email address</label>
-      <input type="email" class="form-control" id="adminEmailInput" name="adminEmail" placeholder="Enter email">
-    </div>
-    <div class="form-group col-md-6">
-      <label for="adminPasswordInput">Password</label>
-      <input type="password" class="form-control" id="adminPasswordInput" name="adminPassword" placeholder="Password">
-    </div>
-  </div>
-  <div class="form-row">
-    <div class="form-group col-12">
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" id="adminIsSuperAdminInput" name="adminIsSuperAdminInput">
-        <label class="form-check-label" for="adminIsSuperAdminInput">
-          Make Super Admin
-        </label>
+</div>
+
+<div class="row">
+  <div class="col">
+    <p class="lead">Please only create admin accounts to people you trust. Admins will be able to approve or reject submissions.</p>
+    <form method="POST">
+      <div class="form-row">
+        <div class="form-group col-md-12">
+          <label for="adminNameInput">Full Name</label>
+          <input type="text" class="form-control" id="adminNameInput" name="adminName" placeholder="Enter name">
+        </div>
       </div>
-    </div>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="adminEmailInput">Email address</label>
+          <input type="email" class="form-control" id="adminEmailInput" name="adminEmail" placeholder="Enter email">
+        </div>
+        <div class="form-group col-md-6">
+          <label for="adminPasswordInput">Password</label>
+          <input type="password" class="form-control" id="adminPasswordInput" name="adminPassword" placeholder="Password">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-12">
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="adminIsSuperAdminInput" name="adminIsSuperAdminInput" disabled>
+            <label class="form-check-label" for="adminIsSuperAdminInput">
+              Make Super Admin
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-12">
+          <input type="hidden" name="formSubmit" value="1">
+          <button type="submit" class="btn btn-primary">Create</button>
+        </div>
+      </div>
+    </form>
   </div>
-  <div class="form-row">
-    <div class="form-group col-12">
-      <input type="hidden" name="formSubmit" value="1">
-      <button type="submit" class="btn btn-primary">Create</button>
-    </div>
-  </div>
-</form>
+</div>
 <?php
 showFooter();

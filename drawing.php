@@ -2,34 +2,26 @@
 require 'requires/core.php';
 require 'dbconfig.php';
 
-showHeader('About');
-
-$uniSlug = NULL;
-$profSlug = NULL;
 $drawingId = NULL;
-
-if(isset($_GET['uni'])) {
-  $uniId = $_GET['uni'];
-}
-
-if(isset($_GET['prof'])) {
-  $profId = $_GET['prof'];
-}
 
 if(isset($_GET['drawing'])) {
   $drawingId = $_GET['drawing'];
 }
 
-// Specific Drawing
-if(!is_null($drawingId)) {
-  $stmt = $conn->prepare("SELECT drawingId, artist, status, profName, profSlug, uniName, uniSlug FROM drawprof_drawings JOIN drawprof_profs ON drawprof_drawings.profId = drawprof_profs.profId JOIN drawprof_unis ON drawprof_profs.uniId = drawprof_unis.uniId WHERE drawprof_drawings.drawingId = ?");
+if(is_null($drawingId) || $drawingId == '') {
+  header("Location: gallery.php");
+} else {
+  // Drawing Spec
+  $stmt = $conn->prepare("SELECT drawingId, artist, submittedTime, status, profRMPId, profName, profSlug, uniName, uniSlug FROM drawprof_drawings JOIN drawprof_profs ON drawprof_drawings.profId = drawprof_profs.profId JOIN drawprof_unis ON drawprof_profs.uniId = drawprof_unis.uniId WHERE drawprof_drawings.drawingId = ? LIMIT 1");
   $stmt->execute([$drawingId]);
 
   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $drawingId = $row['drawingId'];
-    $artist = $row['artist'];
+    $artist = $row['artist'] == '' ? 'anonymous' : $row['artist'];
+    $submittedTime = $row['submittedTime'];
     $status = $row['status'];
 
+    $profRMPId = $row['profRMPId'];
     $profName = $row['profName'];
     $profSlug = $row['profSlug'];
     $uniName = $row['uniName'];
@@ -38,6 +30,9 @@ if(!is_null($drawingId)) {
     $drawingFilename = "$uniSlug-$profSlug-$drawingId.png";
 
     $link = $base_url . "drawing.php?drawing=$drawingId";
+
+    // Since only 1, safe to do this
+    showHeader("$profName by $artist");
 
     if($status == 1) {
       // If Approved, redirect to clean URL
@@ -58,67 +53,42 @@ if(!is_null($drawingId)) {
 
     if($status != 3 || isSuperAdmin()) {
       ?>
+
       <!-- Professor Meta Container -->
-      <div class="profMetaContainer">
-        <h2 class="profName"><?=$profName; ?></h2>
-        <h3 class="uniName"><?=$uniName; ?></h3>
-      </div>
-      <!-- Canvas Container -->
-      <div class="drawingContainer">
-        <img class="d" src="drawings/<?=$drawingFilename; ?>">
+      <div class="row justify-content-center">
+        <div class="col text-center">
+          <h2 class="profName"><?=$profName; ?></h2>
+          <h3 class="uniName"><?=$uniName; ?></h3>
+        </div>
       </div>
 
+      <!-- Canvas Container -->
       <div class="row">
         <div class="col text-center">
-          Drawing by <u><?=$artist; ?></u>.
+          <div class="drawingContainer">
+            <img class="d" src="drawings/<?=$drawingFilename; ?>">
+          </div>
         </div>
       </div>
-      <?php
-    }
 
-    /*
-    if(isSuperAdmin()) {
-      ?>
+      <!-- Artist -->
       <div class="row">
-        <div class="col-4"></div>
-          <div class="col-4">
-            <div class="form-check">
-              <input class="form-check-input" type="radio" name="drawings[<?=$drawingId; ?>]" id="drawing_<?=$drawingId; ?>_approve" value="1" checked>
-              <label class="form-check-label" for="drawing_<?=$drawingId; ?>_approve">
-                Approve
-              </label>
-            </div>
-            <div class="form-check">
-              <input class="form-check-input" type="radio" name="drawings[<?=$drawingId; ?>]" id="drawing_<?=$drawingId; ?>_reject" value="2">
-              <label class="form-check-label" for="drawing_<?=$drawingId; ?>_reject">
-                Reject
-              </label>
-            </div>
-            <div class="form-check">
-              <input class="form-check-input" type="radio" name="drawings[<?=$drawingId; ?>]" id="drawing_<?=$drawingId; ?>_pending" value="0">
-              <label class="form-check-label" for="drawing_<?=$drawingId; ?>_pending">
-                Pending
-              </label>
-            </div>
-            <div class="form-check">
-              <input class="form-check-input" type="radio" name="drawings[<?=$drawingId; ?>]" id="drawing_<?=$drawingId; ?>_unwholesome" value="3">
-              <label class="form-check-label" for="drawing_<?=$drawingId; ?>_unwholesome">
-                Unwholesome
-              </label>
-            </div>
-            <button type="submit" class="btn btn-primary">- V E T O -</button>
+        <div class="col text-center pt-3">
+          <blockquote class="blockquote">
+            <footer class="blockquote-footer"><?=$artist; ?></footer>
+          </blockquote>
         </div>
-        <div class="col-4"></div>
       </div>
 
+      <!-- Submitted Time -->
+      <div class="row">
+        <div class="col text-center">
+          <p><small>Submitted On: <u><em><?=parseTimestamp($submittedTime); ?></em></u>.</small></p>
+        </div>
+      </div>
       <?php
     }
-    */
   }
-} else if(!is_null($profId)) {
-  // Professor Filter
-  $stmt = $conn->prepare("SELECT drawingId, status, profName, profSlug, uniName, uniSlug FROM drawprof_drawings JOIN drawprof_profs ON drawprof_drawings.profId = drawprof_profs.profId JOIN drawprof_unis ON drawprof_profs.uniId = drawprof_unis.uniId WHERE drawprof_drawings.drawingId = ?");
-  $stmt->execute([$drawingId]);
-
 }
+
 showFooter();

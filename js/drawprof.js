@@ -100,6 +100,12 @@ $(document).ready(function() {
   ctx.strokeStyle = '#000000';
   ctx.lineWidth = 5;
 
+  // Size Button
+  $('.canvasStrokeSizeRadio').on('click', function() {
+    var strokeSize = $(this).val()
+    ctx.lineWidth = strokeSize
+  });
+
   // Color Picker
   var $colorPickerContainer = $('#colorPickerContainer')
   var colors = ['#FFFFFF', '#E4E4E4', '#888888', '#222222', '#FDA8D1', '#E20A17', '#E39423', '#9F6A45', '#E4D72F', '#96DE50', '#1DBC20', '#23D3DC', '#1484C5', '#0920E6', '#CE72E2', '#810F7E']
@@ -114,7 +120,9 @@ $(document).ready(function() {
   // Clear Canvas Button
   var $clearCanvasButton = $('#clearCanvasButton')
   $clearCanvasButton.on('click', function() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    if(confirm('Are you sure you want to clear the canvas?')) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);      
+    }
   })
 
   // Other

@@ -11,6 +11,18 @@
   }
 
   // Get POST values
+  $validURLS = ["http://www.ratemyprofessors.com/ShowRatings.jsp?tid=", "https://www.ratemyprofessors.com/ShowRatings.jsp?tid=", "http://ratemyprofessors.com/ShowRatings.jsp?tid=", "https://ratemyprofessors.com/ShowRatings.jsp?tid="];
+  $profRMPId = str_replace($validURLS, '', $profUrl);
+
+  // If invalid URL
+  /*
+  if(isNaN($profRMPId)) {
+
+  } else {
+
+  }
+  */
+
   $profUrl = $_POST['profUrl'];
   $artist = $_POST['artistName'];
   $imageDataUrl = $_POST['imageDataUrl'];
@@ -47,27 +59,27 @@
   }
 
   // Get professor
-  $stmt = $conn->prepare("SELECT profId, profSlug FROM drawprof_profs WHERE (uniId = ? AND profName = ?)");
-  $stmt->execute([$uniId, $profName]);
+  $stmt = $conn->prepare("SELECT profId, profRMPId, profSlug FROM drawprof_profs WHERE (uniId = ? AND profRMPId = ?)");
+  $stmt->execute([$uniId, $profRMPId]);
 
   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $profId = $row['profId'];
-    $profSlug = $row['profSlug'];
+    $profSlug = $row['profSlug'] . '-' . $row['profRMPId'];
   }
 
   // No professor
   if(is_null($profId)) {
-    $profSlug = slug($profName);
+    $profSlug = slug($profName) . '-' . $profRMPId;
 
-    $stmt = $conn->prepare("INSERT INTO drawprof_profs (uniId, profName, profSlug) VALUES(?, ?, ?)");
-    $stmt->execute([$uniId, $profName, $profSlug]);
+    $stmt = $conn->prepare("INSERT INTO drawprof_profs (uniId, profRMPId, profName, profSlug) VALUES(?, ?, ?, ?)");
+    $stmt->execute([$uniId, $profRMPId, $profName, $profSlug]);
 
     $profId = $conn->lastInsertId();
   }
 
   // Insert drawing
   $stmt = $conn->prepare("INSERT INTO drawprof_drawings (profId, artist, submittedTime, isMobile, status, statusChangeAdminId, statusChangeTime) VALUES(?, ?, ?, ?, 0, 0, 0)");
-  $stmt->execute([$profId, $artist, time(), $isMobile]);
+  $stmt->execute([$profId, trim($artist), time(), $isMobile]);
 
   $drawingId = $conn->lastInsertId();
 

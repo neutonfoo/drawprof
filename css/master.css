@@ -8,17 +8,9 @@ body {
 }
 
 #mainContainer {
-  margin: 0 auto 0 auto;
+  /* margin: 0 auto 0 auto; */
   padding-top: 20px;
   /* background-color: #EEE; */
-}
-
-.profMetaContainer {
-  text-align: center;
-}
-
-.canvasContainer, .drawingContainer  {
-  text-align: center;
 }
 
 .canvasContainer #c, .drawingContainer .d {
@@ -32,7 +24,7 @@ body {
 }
 
 #colorPickerContainer {
-  text-align: center;
+  /* text-align: center; */
 }
 
 #colorPickerContainer .color {
@@ -48,7 +40,7 @@ body {
 }
 
 #controlsContainer {
-  text-align: center;
+  /* text-align: center; */
 }
 
 #footerContainer a {

@@ -7,7 +7,11 @@ if(isset($_GET['loginFailed'])) {
   <?php
 }
 ?>
-<h1>Login</h1>
+<div class="row">
+  <div class="col">
+    <h1>Login</h1>
+  </div>
+</div>
 <form action="login.php" method="POST">
   <div class="form-row">
     <div class="form-group col-md-6">

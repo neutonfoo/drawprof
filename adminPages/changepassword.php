@@ -1,5 +1,5 @@
 <?php
-showHeader('Admin Panel');
+showHeader('Change Password');
 
 if(isset($_POST['formSubmit'])) {
   $adminPassword1 = $_POST['adminPassword1'];
@@ -22,7 +22,14 @@ if(isset($_POST['formSubmit'])) {
   }
 }
 ?>
-<h1><a href="?">AP</a> &bull; Change Password</h1>
+
+<div class="row">
+  <div class="col">
+    <h1><a href="?">AP</a> &bull; Change Password</h1>
+  </div>
+</div>
+
+
 <form method="POST">
   <div class="form-row">
     <div class="form-group col-md-6">
