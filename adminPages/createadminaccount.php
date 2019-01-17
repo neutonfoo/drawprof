@@ -26,12 +26,12 @@ if(isset($_POST['formSubmit'])) {
 <div class="row">
   <div class="col">
     <h1><a href="?">AP</a> &bull; Create Admin Account</h1>
+    <p class="lead">Please only create admin accounts to people you trust. Admins will be able to approve or reject submissions.</p>
   </div>
 </div>
 
 <div class="row">
   <div class="col">
-    <p class="lead">Please only create admin accounts to people you trust. Admins will be able to approve or reject submissions.</p>
     <form method="POST">
       <div class="form-row">
         <div class="form-group col-md-12">

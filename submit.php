@@ -11,80 +11,77 @@
   }
 
   // Get POST values
-  $validURLS = ["http://www.ratemyprofessors.com/ShowRatings.jsp?tid=", "https://www.ratemyprofessors.com/ShowRatings.jsp?tid=", "http://ratemyprofessors.com/ShowRatings.jsp?tid=", "https://ratemyprofessors.com/ShowRatings.jsp?tid="];
+  $validURLS = ["http://www.ratemyprofessors.com/ShowRatings.jsp?tid=", "https://www.ratemyprofessors.com/ShowRatings.jsp?tid=", "http://ratemyprofessors.com/ShowRatings.jsp?tid=", "https://ratemyprofessors.com/ShowRatings.jsp?tid=", "showMyProfs=true", "showMyProfs=false", "&"];
   $profRMPId = str_replace($validURLS, '', $profUrl);
 
   // If invalid URL
-  /*
-  if(isNaN($profRMPId)) {
-
+  if(!is_numeric($profRMPId)) {
+    header("Location: index.php?linkerror=1");
   } else {
 
-  }
-  */
+    $profUrl = $_POST['profUrl'];
+    $artist = $_POST['artistName'];
+    $imageDataUrl = $_POST['imageDataUrl'];
+    $isMobile = $_POST['isMobile'];
 
-  $profUrl = $_POST['profUrl'];
-  $artist = $_POST['artistName'];
-  $imageDataUrl = $_POST['imageDataUrl'];
-  $isMobile = $_POST['isMobile'];
+    // Get Prof Name
+    $profMeta = explode("|", getProfMeta($profUrl));
+    $profName = $profMeta[0];
+    $uniName = $profMeta[1];
 
-  // Get Prof Name
-  $profMeta = explode("|", getProfMeta($profUrl));
-  $profName = $profMeta[0];
-  $uniName = $profMeta[1];
+    // Default
+    $uniId = NULL;
+    $uniSlug = NULL;
+    $profId = NULL;
+    $profSlug = NULL;
 
-  // Default
-  $uniId = NULL;
-  $uniSlug = NULL;
-  $profId = NULL;
-  $profSlug = NULL;
+    // Get university
+    $stmt = $conn->prepare("SELECT uniId, uniSlug FROM drawprof_unis WHERE uniName = ?");
+    $stmt->execute([$uniName]);
 
-  // Get university
-  $stmt = $conn->prepare("SELECT uniId, uniSlug FROM drawprof_unis WHERE uniName = ?");
-  $stmt->execute([$uniName]);
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $uniId = $row['uniId'];
+      $uniSlug = $row['uniSlug'];
+    }
 
-  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-    $uniId = $row['uniId'];
-    $uniSlug = $row['uniSlug'];
-  }
+    // No university
+    if(is_null($uniId)) {
+      $uniSlug = slug($uniName);
 
-  // No university
-  if(is_null($uniId)) {
-    $uniSlug = slug($uniName);
+      $stmt = $conn->prepare("INSERT INTO drawprof_unis (uniName, uniSlug) VALUES(?,?)");
+      $stmt->execute([$uniName, $uniSlug]);
 
-    $stmt = $conn->prepare("INSERT INTO drawprof_unis (uniName, uniSlug) VALUES(?,?)");
-    $stmt->execute([$uniName, $uniSlug]);
+      $uniId = $conn->lastInsertId();
+    }
 
-    $uniId = $conn->lastInsertId();
-  }
+    // Get professor
+    $stmt = $conn->prepare("SELECT profId, profRMPId, profSlug FROM drawprof_profs WHERE (uniId = ? AND profRMPId = ?)");
+    $stmt->execute([$uniId, $profRMPId]);
 
-  // Get professor
-  $stmt = $conn->prepare("SELECT profId, profRMPId, profSlug FROM drawprof_profs WHERE (uniId = ? AND profRMPId = ?)");
-  $stmt->execute([$uniId, $profRMPId]);
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $profId = $row['profId'];
+      $profSlug = $row['profSlug'] . '-' . $row['profRMPId'];
+    }
 
-  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-    $profId = $row['profId'];
-    $profSlug = $row['profSlug'] . '-' . $row['profRMPId'];
-  }
+    // No professor
+    if(is_null($profId)) {
+      $profSlug = slug($profName) . '-' . $profRMPId;
 
-  // No professor
-  if(is_null($profId)) {
-    $profSlug = slug($profName) . '-' . $profRMPId;
+      $stmt = $conn->prepare("INSERT INTO drawprof_profs (uniId, profRMPId, profName, profSlug) VALUES(?, ?, ?, ?)");
+      $stmt->execute([$uniId, $profRMPId, $profName, $profSlug]);
 
-    $stmt = $conn->prepare("INSERT INTO drawprof_profs (uniId, profRMPId, profName, profSlug) VALUES(?, ?, ?, ?)");
-    $stmt->execute([$uniId, $profRMPId, $profName, $profSlug]);
+      $profId = $conn->lastInsertId();
+    }
 
-    $profId = $conn->lastInsertId();
-  }
+    // Insert drawing
+    $stmt = $conn->prepare("INSERT INTO drawprof_drawings (profId, artist, submittedTime, isMobile, status, statusChangeAdminId, statusChangeTime) VALUES(?, ?, ?, ?, 0, 0, 0)");
+    $stmt->execute([$profId, trim($artist), time(), $isMobile]);
 
-  // Insert drawing
-  $stmt = $conn->prepare("INSERT INTO drawprof_drawings (profId, artist, submittedTime, isMobile, status, statusChangeAdminId, statusChangeTime) VALUES(?, ?, ?, ?, 0, 0, 0)");
-  $stmt->execute([$profId, trim($artist), time(), $isMobile]);
+    $drawingId = $conn->lastInsertId();
 
-  $drawingId = $conn->lastInsertId();
+    // Save image
+    $data = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $imageDataUrl));
+    file_put_contents("drawings/$uniSlug-$profSlug-$drawingId.png", $data);
 
-  // Save image
-  $data = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $imageDataUrl));
-  file_put_contents("drawings/$uniSlug-$profSlug-$drawingId.png", $data);
-
-  header("Location: drawing.php?drawing=$drawingId");
+    header("Location: drawing.php?drawing=$drawingId");
+}

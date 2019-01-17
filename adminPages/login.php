@@ -5,7 +5,16 @@ if(isset($_GET['loginFailed'])) {
   ?>
   <div class="alert alert-danger" role="alert">Login failed.</div>
   <?php
+} else if(isset($_GET['logout'])) {
+  ?>
+  <div class="row">
+    <div class="col">
+      <div class="alert alert-success" role="alert">Logout successful.</div>
+    </div>
+  </div>
+  <?php
 }
+
 ?>
 <div class="row">
   <div class="col">

@@ -11,12 +11,13 @@ if(isset($_POST['formSubmit'])) {
   </div>
 </div>
 
-<table class="table table-responsive-md">
+<table class="table table-responsive-lg">
   <thead>
     <tr>
       <th scope="col">#</th>
       <th scope="col">Name</th>
       <th scope="col">Email</th>
+      <th scope="col">Date Created</th>
       <th scope="col">Super Admin</th>
       <th scope="col">Parent #</th>
     </tr>
@@ -37,18 +38,33 @@ if(isset($_POST['formSubmit'])) {
       ?>
       <tr id="admin_<?=$adminId; ?>">
         <th scope="row"><?=$adminId; ?></th>
-        <td><?=$adminName; ?></td>
+        <td>
+          <?=$adminName; ?>
+        </td>
         <td><?=$adminEmail; ?></td>
         <td>
+          <?php
+          if($timeCreated == 0) {
+            ?>
+            <mark><b>OG ACCOUNT</b></mark>
+            <?php
+          } else {
+            ?>
+            <?=parseTimestamp($timeCreated); ?>
+            <?php
+          }
+          ?>
+        </td>
+        <td>
           <div class="form-check">
-            <input type="checkbox" class="form-check-input" id="adminIsSuperUser[<?=$adminId; ?>]" name="adminIsSuperUser[<?=$adminId; ?>]" <?php if($isSuperAdmin) { ?>checked<?php } ?>>
+            <input type="checkbox" class="form-check-input" id="adminIsSuperUser[<?=$adminId; ?>]" name="adminIsSuperUser[<?=$adminId; ?>]" <?php if($isSuperAdmin) { ?>checked<?php } ?> disabled>
           </div>
         </td>
         <td>
           <?php
             if($parentAdminId == 0) {
               ?>
-              <b>OG ACCOUNT</b>
+              None
               <?php
             } else {
               ?>

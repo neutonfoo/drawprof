@@ -63,8 +63,8 @@ function showHeader($title) {
           <div class="col">
             <!-- Main Alert -->
             <div class="alert alert-info" role="alert">
-              <div class="h4 alert-heading">Closed Beta</div>
-              <p class="mb-0">DrawProf is currently in Closed Beta. Please do not share this link.</p>
+              <div class="h4 alert-heading">Announcement</div>
+              <p class="mb-0">DrawProf is currently in <b>Closed Beta</b>. We are working on optimizing mobile support. The site may occasionally go down for maintenance.</p>
                 <!-- You can send all bug reports to our email <a href="mailto:drawprof@salhacks.com?Subject=About%DrawProf" class="alert-link ">drawprof@salhacks.com</a>. -->
             </div>
           </div>

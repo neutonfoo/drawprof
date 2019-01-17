@@ -15,17 +15,12 @@ if(isset($_POST['formSubmit'])) {
 <div class="row">
   <div class="col">
     <h1><a href="?">AP</a> &bull; Approve Submissions</h1>
-  </div>
-</div>
-
-<div class="row">
-  <div class="col">
     <p class="lead">Approve or reject pending submissions here. Submissions marked as <mark>unwholesome</mark> will be hidden.</p>
   </div>
 </div>
 
 <?php
-$stmt = $conn->prepare("SELECT drawingId, profName, profSlug, uniName, uniSlug FROM drawprof_drawings JOIN drawprof_profs ON drawprof_drawings.profId = drawprof_profs.profId JOIN drawprof_unis ON drawprof_profs.uniId = drawprof_unis.uniId WHERE drawprof_drawings.status = 0 ORDER BY drawingId ASC LIMIT 12");
+$stmt = $conn->prepare("SELECT drawingId, drawprof_profs.profId, profName, profSlug, drawprof_unis.uniId, uniName, uniSlug FROM drawprof_drawings JOIN drawprof_profs ON drawprof_drawings.profId = drawprof_profs.profId JOIN drawprof_unis ON drawprof_profs.uniId = drawprof_unis.uniId WHERE drawprof_drawings.status = 0 ORDER BY drawingId ASC LIMIT 12");
 $stmt->execute();
 
 if ($stmt->rowCount() == 0) {
@@ -39,19 +34,37 @@ if ($stmt->rowCount() == 0) {
     <?php
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
       $drawingId = $row['drawingId'];
+
+      $profId = $row['profId'];
       $profName = $row['profName'];
       $profSlug = $row['profSlug'];
+
+      $uniId = $row['uniId'];
       $uniName = $row['uniName'];
       $uniSlug = $row['uniSlug'];
 
       $drawingFilename = "$uniSlug-$profSlug-$drawingId.png";
       ?>
-        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-2">
-          <div class="card my-2">
-            <img src="drawings/<?=$drawingFilename; ?>" class="card-img-top" alt="...">
-            <div class="card-body">
-              <h5 class="card-title"><?=$profName; ?></h5>
-              <p class="card-text"> from <u><?=$uniName; ?></u>.</p>
+      <div class="col-xs-12 col-sm-6 col-md-3 col-lg-2">
+        <div class="card my-2">
+          <a href="<?=$base_url . "drawing.php?drawing=$drawingId"; ?>">
+            <img src="drawings/<?=$drawingFilename; ?>" class="card-img-top border-bottom" alt="...">
+          </a>
+          <div class="card-body">
+            <h5 class="card-title">
+              <a href="<?=$base_url;  ?>gallery.php?prof=<?=$profId; ?>" class="text-secondary"><?=$profName; ?>
+              </a>
+            </h5>
+            <small class="text-muted">
+              <a href="<?=$base_url;  ?>gallery.php?uni=<?=$uniId; ?>" class="text-dark">
+                <?=$uniName; ?>
+              </a>
+            </small>
+
+            <hr>
+
+            <div class="card-text">
+
               <div class="form-check">
                 <input class="form-check-input" type="radio" name="drawings[<?=$drawingId; ?>]" id="drawing_<?=$drawingId; ?>_approve" value="1" checked>
                 <label class="form-check-label" for="drawing_<?=$drawingId; ?>_approve">
@@ -79,6 +92,19 @@ if ($stmt->rowCount() == 0) {
             </div>
           </div>
         </div>
+      </div>
+
+
+
+        <!-- <div class="col-xs-12 col-sm-6 col-md-3 col-lg-2">
+          <div class="card my-2">
+            <img src="drawings/<?=$drawingFilename; ?>" class="card-img-top" alt="...">
+            <div class="card-body">
+              <h5 class="card-title"><?=$profName; ?></h5>
+              <p class="card-text"> from <u><?=$uniName; ?></u>.</p>
+            </div>
+          </div>
+        </div> -->
       <?php
     }
     ?>

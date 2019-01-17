@@ -8,7 +8,7 @@ if(isset($_GET['logout'])) {
   unset($_SESSION['adminName']);
   unset($_SESSION['adminEmail']);
 
-  header("Location: index.php?logout=1");
+  header("Location: admin.php?logout=1");
 } else if(isset($_POST['loggingIn'])) {
   // Logging in
 

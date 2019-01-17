@@ -38,8 +38,8 @@ if(is_null($drawingId) || $drawingId == '') {
       // If Approved, redirect to clean URL
     } else if($status == 0) {
       ?>
-      <div class="alert alert-info" role="alert">This submission is pending approval.</div>
-      <div class="alert alert-info" role="alert">Use this link to check on its status: <a href="<?=$link; ?>"><?=$link; ?></a>.</div>
+      <div class="alert alert-warning" role="alert">This submission is pending approval.</div>
+      <div class="alert alert-warning" role="alert">Use this link to check on its status: <a href="<?=$link; ?>"><?=$link; ?></a>.</div>
       <?php
     } else if($status == 2) {
       ?>
@@ -56,7 +56,7 @@ if(is_null($drawingId) || $drawingId == '') {
 
       <!-- Professor Meta Container -->
       <div class="row justify-content-center">
-        <div class="col text-center">
+        <div class="col-12 text-center">
           <h2 class="profName"><?=$profName; ?></h2>
           <h3 class="uniName"><?=$uniName; ?></h3>
         </div>
@@ -64,7 +64,7 @@ if(is_null($drawingId) || $drawingId == '') {
 
       <!-- Canvas Container -->
       <div class="row">
-        <div class="col text-center">
+        <div class="col-12 text-center">
           <div class="drawingContainer">
             <img class="d" src="drawings/<?=$drawingFilename; ?>">
           </div>
@@ -73,7 +73,7 @@ if(is_null($drawingId) || $drawingId == '') {
 
       <!-- Artist -->
       <div class="row">
-        <div class="col text-center pt-3">
+        <div class="col-12 text-center pt-3">
           <blockquote class="blockquote">
             <footer class="blockquote-footer"><?=$artist; ?></footer>
           </blockquote>
@@ -82,7 +82,7 @@ if(is_null($drawingId) || $drawingId == '') {
 
       <!-- Submitted Time -->
       <div class="row">
-        <div class="col text-center">
+        <div class="col-12 text-center">
           <p><small>Submitted On: <u><em><?=parseTimestamp($submittedTime); ?></em></u>.</small></p>
         </div>
       </div>

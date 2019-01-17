@@ -8,18 +8,6 @@ showHeader('Home');
     <div class="alert alert-warning" role="alert">Friendly reminder to keep submissions wholesome!</div>
   </div>
 </div>
-<?php
-
-if(isset($_GET['logout'])) {
-  ?>
-  <div class="row">
-    <div class="col">
-      <div class="alert alert-success" role="alert">Logout successful.</div>
-    </div>
-  </div>
-  <?php
-}
-?>
 <!-- Professor URL -->
 <div class="row justify-content-center">
   <div class="col-md-8">
@@ -34,7 +22,7 @@ if(isset($_GET['logout'])) {
 
 <!-- Professor Meta Container -->
 <div class="row justify-content-center">
-  <div class="col text-center">
+  <div class="col-12 text-center">
     <h2 class="profName">&nbsp;</h2>
     <h3 class="uniName">&nbsp;</h3>
   </div>
@@ -42,7 +30,7 @@ if(isset($_GET['logout'])) {
 
 <!-- Canvas Container -->
 <div class="row">
-  <div class="col text-center">
+  <div class="col-12 text-center">
     <div class="canvasContainer">
       <canvas id="c"></canvas>
     </div>
@@ -51,7 +39,7 @@ if(isset($_GET['logout'])) {
 
 <!-- Stroke Size Container -->
 <div class="row">
-  <div class="col my-3 text-center">
+  <div class="col-12 my-3 text-center">
     <div class="form-check form-check-inline">
       <input class="form-check-input canvasStrokeSizeRadio" name="canvasStrokeSizeRadio" type="radio" id="canvasStrokeSizeRadioThin" value="2">
       <label class="form-check-label" for="canvasStrokeSizeRadioThin">Thin</label>
@@ -73,7 +61,7 @@ if(isset($_GET['logout'])) {
 
 <!-- Color Picker Container -->
 <div class="row">
-  <div class="col text-center">
+  <div class="col-12 text-center">
     <div id="colorPickerContainer"></div>
   </div>
 </div>
