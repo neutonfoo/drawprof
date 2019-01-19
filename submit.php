@@ -100,6 +100,6 @@
         // Destroys session
         unset($_SESSION['tempSavedDrawing']);
 
-        header("Location: drawing.php?drawing=$drawingId");
+        header("Location: $base_url/$uniSlug/$profSlug/$drawingId");
     }
 }

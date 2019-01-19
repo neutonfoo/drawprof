@@ -45,7 +45,7 @@ if(is_null($drawingId) || $drawingId == '') {
 
     $drawingFilename = "$uniSlug-$profSlug-$drawingId.png";
 
-    $link = $base_url . "drawing.php?drawing=$drawingId";
+    $link = $base_url . "/$uniSlug/$profSlug/$drawingId";
 
     // Since only 1, safe to do this
     showHeader("$profName by $artist");
@@ -73,8 +73,16 @@ if(is_null($drawingId) || $drawingId == '') {
       <!-- Professor Meta Container -->
       <div class="row justify-content-center">
         <div class="col-12 text-center">
-          <h2 class="profName"><?=$profName; ?></h2>
-          <h3 class="uniName"><?=$uniName; ?></h3>
+          <h2 class="profName">
+            <a href="<?=$base_url;  ?>/<?=$uniSlug; ?>/<?=$profSlug; ?>" class="text-dark">
+              <?=$profName; ?>
+            </a>
+          </h2>
+          <h3 class="uniName">
+            <a href="<?=$base_url;  ?>/<?=$uniSlug; ?>" class="text-secondary">
+              <?=$uniName; ?>
+            </a>
+          </h3>
         </div>
       </div>
 
@@ -82,7 +90,7 @@ if(is_null($drawingId) || $drawingId == '') {
       <div class="row">
         <div class="col-12 text-center">
           <div class="drawingContainer">
-            <img class="d" src="drawings/<?=$drawingFilename; ?>">
+            <img class="d" src="<?=$base_url?>/drawings/<?=$drawingFilename; ?>">
           </div>
         </div>
       </div>

@@ -17,7 +17,7 @@ if(isset($_POST['formSubmit'])) {
     $stmt = $conn->prepare("UPDATE drawprof_admins SET passwordHash = ? WHERE adminId = ?");
     $stmt->execute([md5($adminPassword1), $_SESSION['adminId']]);
     ?>
-    <div class="alert alert-success" role="alert">Password successfully changed.</div>
+    <div class="alert alert-success" role="alert">Password changed successfully.</div>
     <?php
   }
 }

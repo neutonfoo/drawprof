@@ -9,10 +9,10 @@ function showHeader($title) {
       <meta charset="utf-8">
       <title><?=$title; ?> | DrawProf</title>
       <meta name="viewport" content="width=device-width, initial-scale=1">
-      <link rel="stylesheet" href="css/bootstrap.min.css"/>
-      <script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
-      <script type="text/javascript" src="js/bootstrap.min.js"></script>
-      <link rel="stylesheet" href="css/master.css">
+      <link rel="stylesheet" href="<?=$base_url; ?>/css/bootstrap.min.css"/>
+      <script type="text/javascript" src="<?=$base_url; ?>/js/jquery-3.3.1.min.js"></script>
+      <script type="text/javascript" src="<?=$base_url; ?>/js/bootstrap.min.js"></script>
+      <link rel="stylesheet" href="<?=$base_url; ?>/css/master.css">
 
       <?php
         if($show_analytics) {
@@ -35,18 +35,18 @@ function showHeader($title) {
     <body>
       <!-- Navigation Bar -->
       <nav class="navbar navbar-dark bg-dark navbar-expand-sm">
-        <a class="navbar-brand" href="index.php">DrawProf</a>
+        <a class="navbar-brand" href="<?=$base_url; ?>/">DrawProf</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="collapsibleNavbar">
           <ul class="navbar-nav mr-auto">
             <li class="nav-item">
-              <a class="nav-link" href="gallery.php?sort=recent">Recent</a>
+              <a class="nav-link" href="<?=$base_url; ?>/gallery">Recent</a>
             </li>
           </ul>
-          <form class="form-inline" action="search.php" method="GET">
-            <input name="query" class="form-control mr-sm-2" type="search" placeholder="University or Professor" aria-label="Search" size="22">
+          <form class="form-inline" action="<?=$base_url; ?>/search" method="GET">
+            <input name="q" class="form-control mr-sm-2" type="search" placeholder="University or Professor" aria-label="Search" size="22">
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
           </form>
         </div>
@@ -84,13 +84,13 @@ function showFooter() {
             <div class="col-12 text-center">
               <span class="p-1">&copy; 2019 DrawProf</span>
               <span class="mx-2">&bull;</span>
-              <a href="<?=$base_url . 'about.php'; ?>" class="p-1">About</a>
+              <a href="<?=$base_url; ?>/about" class="p-1">About</a>
               <span class="mx-2">&bull;</span>
-              <a href="<?=$base_url . 'contact.php'; ?>" class="p-1">Contact</a>
+              <a href="<?=$base_url; ?>/contact" class="p-1">Contact</a>
               <!-- <span class="mx-2">&bull;</span>
               <a href="https://devpost.com/software/drawprof" class="p-1">DevPost</a> -->
               <span class="mx-2">&bull;</span>
-              <a href="admin.php" class="p-1<?php if(isset($_SESSION['adminId'])) {?> bg-dark text-white<?php  } ?>">Admin</a>
+              <a href="<?=$base_url; ?>/admin" class="p-1<?php if(isset($_SESSION['adminId'])) {?> bg-dark text-white<?php  } ?>">Admin</a>
               <?php
               // If logged in
               if(isset($_SESSION['adminId'])) {
@@ -107,6 +107,13 @@ function showFooter() {
     </body>
   </html>
   <?php
+}
+
+function isAdmin() {
+  if(isset($_SESSION['adminId'])) {
+    return true;
+  }
+  return false;
 }
 
 function isSuperAdmin() {

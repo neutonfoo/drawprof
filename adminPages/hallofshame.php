@@ -26,10 +26,16 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
   <div class="col-xs-12 col-sm-6 col-md-3 col-lg-2">
     <div class="card my-2">
-      <a href="<?=$base_url . "drawing.php?drawing=$drawingId"; ?>"><img src="drawings/<?=$drawingFilename; ?>" class="card-img-top" alt="..."></a>
+      <a href="<?=$base_url;  ?>/<?=$uniSlug; ?>/<?=$profSlug; ?>/<?=$drawingId; ?>">
+        <img src="<?=$base_url; ?>/drawings/<?=$drawingFilename; ?>" class="card-img-top border-bottom" alt="...">
+      </a>
       <div class="card-body">
-        <h5 class="card-title"><?=$profName; ?></h5>
-        <p class="card-text"> from <u><?=$uniName; ?></u>.</p>
+        <h5 class="card-title">
+          <a href="<?=$base_url;  ?>/<?=$uniSlug; ?>/<?=$profSlug; ?>" class="text-secondary"><?=$profName; ?></a>
+        </h5>
+        <small class="text-muted">
+          <a href="<?=$base_url;  ?>/<?=$uniSlug; ?>" class="text-dark"><?=$uniName; ?></a>
+        </small>
       </div>
     </div>
   </div>

@@ -8,8 +8,8 @@ $page = 1;
 // Initialize Variables from GET
 $sort = isset($_GET['sort']) ? $_GET['sort'] : NULL;
 $page = isset($_GET['page']) ? $_GET['page'] : NULL;
-$uniId = isset($_GET['uni']) ? $_GET['uni'] : NULL;
-$profId = isset($_GET['prof']) ? $_GET['prof'] : NULL;
+$uniSlug = isset($_GET['uni']) ? $_GET['uni'] : NULL;
+$profSlug = isset($_GET['prof']) ? $_GET['prof'] : NULL;
 $drawingId = isset($_GET['drawing']) ? $_GET['drawing'] : NULL;
 
 // Reset page if < 1
@@ -21,38 +21,66 @@ if($page < 1) {
 $offset = ($page - 1) * $posts_per_page;
 $postsToLoad = $posts_per_page + 1;
 
+$inQuery = "";
+$displaySubmissionStatuses = [];
+
+$displaySubmissionStatuses[] = 1;
+
+if(isAdmin()) {
+  $displaySubmissionStatuses[] = 0;
+
+  if(getAdminSetting('showRejectedPostsInGalleryViews')) {
+    $displaySubmissionStatuses[] = 2;
+  }
+  if(getAdminSetting('showUnwholesomePostsInGalleryViews')) {
+    $displaySubmissionStatuses[] = 3;
+  }
+}
+
+$numberOfSubmissionStatuses = sizeof($displaySubmissionStatuses);
+$inQuery = implode(',', array_fill(0, count($displaySubmissionStatuses), '?'));
+
 // Prepare SQL Statements
-if(!is_null($sort)) {
-  // If sort
-  $filter = "sort";
-
-  $stmt = $conn->prepare("SELECT drawingId, submittedTime, isMobile, drawprof_profs.profId, profName, profSlug, drawprof_unis.uniId, uniName, uniSlug FROM drawprof_drawings, drawprof_unis, drawprof_profs WHERE drawprof_drawings.status = 1 AND drawprof_drawings.profId = drawprof_profs.profId AND drawprof_profs.uniId = drawprof_unis.uniId ORDER BY submittedTime DESC LIMIT ? OFFSET ?");
-  $stmt->bindParam(1, $postsToLoad, PDO::PARAM_INT);
-  $stmt->bindParam(2, $offset, PDO::PARAM_INT);
-} else if(!is_null($uniId)) {
-  // If uni
-  $filter = "uni";
-
-  // $stmt = $conn->prepare("SELECT drawingId, submittedTime, isMobile, profName, profSlug, uniName, uniSlug FROM drawprof_drawings INNER JOIN drawprof_profs ON drawprof_drawings.profId = drawprof_profs.profId INNER JOIN drawprof_unis ON drawprof_unis.uniId = ? LIMIT ? OFFSET ?");
-  $stmt = $conn->prepare("SELECT drawingId, submittedTime, isMobile, drawprof_profs.profId, profName, profSlug, drawprof_unis.uniId, uniName, uniSlug FROM drawprof_unis INNER JOIN drawprof_profs ON drawprof_profs.uniId = drawprof_unis.uniId INNER JOIN drawprof_drawings ON drawprof_drawings.profId = drawprof_profs.profId WHERE drawprof_unis.uniId = ? AND drawprof_drawings.status = 1 ORDER BY submittedTime DESC LIMIT ? OFFSET ?");
-  $stmt->bindParam(1, $uniId, PDO::PARAM_INT);
-  $stmt->bindParam(2, $postsToLoad, PDO::PARAM_INT);
-  $stmt->bindParam(3, $offset, PDO::PARAM_INT);
-} else if(!is_null($profId)) {
+if(!is_null($profSlug)) {
   // If prof
   $filter = "prof";
 
-  $stmt = $conn->prepare("SELECT drawingId, submittedTime, isMobile, drawprof_profs.profId, profName, profSlug, drawprof_unis.uniId, uniName, uniSlug FROM drawprof_drawings INNER JOIN drawprof_profs ON drawprof_profs.profId = drawprof_drawings.profId INNER JOIN drawprof_unis ON drawprof_unis.uniId = drawprof_profs.uniId WHERE drawprof_drawings.profId = ? AND drawprof_drawings.status = 1 ORDER BY submittedTime DESC LIMIT ? OFFSET ?");
-  $stmt->bindParam(1, $profId, PDO::PARAM_INT);
-  $stmt->bindParam(2, $postsToLoad, PDO::PARAM_INT);
-  $stmt->bindParam(3, $offset, PDO::PARAM_INT);
+  $stmt = $conn->prepare("SELECT drawingId, submittedTime, status, isMobile, drawprof_profs.profId, profName, profSlug, drawprof_unis.uniId, uniName, uniSlug FROM drawprof_profs INNER JOIN drawprof_unis ON drawprof_unis.uniId = drawprof_profs.uniId INNER JOIN drawprof_drawings ON drawprof_drawings.profId = drawprof_profs.profId WHERE drawprof_profs.profSlug = ? AND drawprof_drawings.status IN ($inQuery) ORDER BY submittedTime DESC LIMIT ? OFFSET ?");
+
+  $stmt->bindParam(1, $profSlug, PDO::PARAM_STR);
+  foreach($displaySubmissionStatuses as $parameterId => $submissionStatus) {
+    $stmt->bindValue(($parameterId + 2), $submissionStatus, PDO::PARAM_INT);
+  }
+
+
+  $stmt->bindParam($numberOfSubmissionStatuses + 2, $postsToLoad, PDO::PARAM_INT);
+  $stmt->bindParam($numberOfSubmissionStatuses + 3, $offset, PDO::PARAM_INT);
+} else if(!is_null($uniSlug)) {
+  // If uni
+  $filter = "uni";
+
+  $stmt = $conn->prepare("SELECT drawingId, submittedTime, status, isMobile, drawprof_profs.profId, profName, profSlug, drawprof_unis.uniId, uniName, uniSlug FROM drawprof_unis INNER JOIN drawprof_profs ON drawprof_profs.uniId = drawprof_unis.uniId INNER JOIN drawprof_drawings ON drawprof_drawings.profId = drawprof_profs.profId WHERE drawprof_unis.uniSlug = ? AND drawprof_drawings.status IN ($inQuery) ORDER BY submittedTime DESC LIMIT ? OFFSET ?");
+  $stmt->bindParam(1, $uniSlug, PDO::PARAM_STR);
+
+  foreach($displaySubmissionStatuses as $parameterId => $submissionStatus) {
+    $stmt->bindValue(($parameterId + 2), $submissionStatus, PDO::PARAM_INT);
+  }
+
+
+  $stmt->bindParam($numberOfSubmissionStatuses + 2, $postsToLoad, PDO::PARAM_INT);
+  $stmt->bindParam($numberOfSubmissionStatuses + 3, $offset, PDO::PARAM_INT);
 } else {
   // Display all by recent by default
   $filter = "sort";
 
-  $stmt = $conn->prepare("SELECT drawingId, submittedTime, isMobile, drawprof_profs.profId, profName, profSlug, drawprof_unis.uniId, uniName, uniSlug FROM drawprof_drawings, drawprof_unis, drawprof_profs WHERE drawprof_drawings.status = 1 AND drawprof_drawings.profId = drawprof_profs.profId AND drawprof_profs.uniId = drawprof_unis.uniId ORDER BY submittedTime DESC LIMIT ? OFFSET ?");
-  $stmt->bindParam(1, $postsToLoad, PDO::PARAM_INT);
-  $stmt->bindParam(2, $offset, PDO::PARAM_INT);
+  $stmt = $conn->prepare("SELECT drawingId, submittedTime, status, isMobile, drawprof_profs.profId, profName, profSlug, drawprof_unis.uniId, uniName, uniSlug FROM drawprof_drawings, drawprof_unis, drawprof_profs WHERE drawprof_drawings.status IN ($inQuery) AND drawprof_drawings.profId = drawprof_profs.profId AND drawprof_profs.uniId = drawprof_unis.uniId ORDER BY submittedTime DESC LIMIT ? OFFSET ?");
+  foreach($displaySubmissionStatuses as $parameterId => $submissionStatus) {
+    $stmt->bindValue(($parameterId + 1), $submissionStatus, PDO::PARAM_INT);
+  }
+
+
+  $stmt->bindParam($numberOfSubmissionStatuses + 1, $postsToLoad, PDO::PARAM_INT);
+  $stmt->bindParam($numberOfSubmissionStatuses + 2, $offset, PDO::PARAM_INT);
 }
 
 // To see if there's one extra to load next pagniation
@@ -77,6 +105,7 @@ if($numberOfPosts == 0) {
   </div>
   <?php
 } else {
+
     $postCount = 0;
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
@@ -91,13 +120,29 @@ if($numberOfPosts == 0) {
       $submittedTime = $row['submittedTime'];
       $isMobile = $row['isMobile'];
 
-      $profId = $row['profId'];
       $profName = $row['profName'];
       $profSlug = $row['profSlug'];
 
-      $uniId = $row['uniId'];
       $uniName = $row['uniName'];
       $uniSlug = $row['uniSlug'];
+
+      $status = $row['status'];
+
+      $cardBody = "";
+      $cardBorder = "";
+
+      if(isAdmin()) {
+        if($status == 0) {
+          // $cardBody = "bg-dark";
+          $cardBorder = "border-dark";
+        } else if($status == 2) {
+          // $cardBody = "bg-warning";
+          $cardBorder = "border-warning";
+        } else if($status == 3) {
+          // $cardBody = "bg-danger";
+          $cardBorder = "border-danger";
+        }
+      }
 
       $drawingFilename = "$uniSlug-$profSlug-$drawingId.png";
 
@@ -115,6 +160,15 @@ if($numberOfPosts == 0) {
         }
 
         showHeader($title);
+
+        if(isset($_GET['searcherror'])) {
+          ?>
+          <div class="alert alert-warning" role="alert">
+            Your search query has to be at least 5 characters.
+          </div>
+          <?php
+        }
+
         ?>
         <div class="row">
           <div class="col">
@@ -126,19 +180,16 @@ if($numberOfPosts == 0) {
       }
       ?>
       <div class="col-xs-12 col-sm-6 col-md-3 col-lg-2">
-        <div class="card my-2">
-          <a href="<?=$base_url . "drawing.php?drawing=$drawingId"; ?>">
-            <img src="drawings/<?=$drawingFilename; ?>" class="card-img-top border-bottom" alt="...">
+        <div class="card my-2 <?=$cardBody?> <?=$cardBorder?>">
+          <a href="<?=$base_url;  ?>/<?=$uniSlug; ?>/<?=$profSlug; ?>/<?=$drawingId; ?>">
+            <img src="<?=$base_url; ?>/drawings/<?=$drawingFilename; ?>" class="card-img-top border-bottom" alt="...">
           </a>
           <div class="card-body">
             <h5 class="card-title">
-              <a href="<?=$base_url;  ?>gallery.php?prof=<?=$profId; ?>" class="text-secondary"><?=$profName; ?>
-              </a>
+              <a href="<?=$base_url;  ?>/<?=$uniSlug; ?>/<?=$profSlug; ?>" class="text-dark"><?=$profName; ?></a>
             </h5>
             <small class="text-muted">
-              <a href="<?=$base_url;  ?>gallery.php?uni=<?=$uniId; ?>" class="text-dark">
-                <?=$uniName; ?>
-              </a>
+              <a href="<?=$base_url;  ?>/<?=$uniSlug; ?>" class="text-secondary"><?=$uniName; ?></a>
             </small>
           </div>
         </div>

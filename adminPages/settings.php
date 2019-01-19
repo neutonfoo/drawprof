@@ -13,6 +13,9 @@ if(isset($_POST['formSubmit'])) {
 
   // Need to update settings session
   $_SESSION['adminSettings'] = $userSettings;
+  ?>
+  <div class="alert alert-success" role="alert">Settings changed successfully.</div>
+  <?php
 }
 ?>
 

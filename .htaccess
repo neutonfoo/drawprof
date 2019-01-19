@@ -1,7 +1,25 @@
 RewriteEngine On
-RewriteRule ^([a-z0-9\-]+)$ drawing.php?uniId=$1
-RewriteRule ^([a-z0-9\-]+)/$ drawing.php?uniId=$1
-RewriteRule ^([a-z0-9\-]+)/([a-z0-9\-]+)$ drawing.php?uniId=$1&profId=$2
-RewriteRule ^([a-z0-9\-]+)/([a-z0-9\-]+)/$ drawing.php?uniId=$1&profId=$2
-RewriteRule ^([a-z0-9\-]+)/([a-z0-9\-]+)/drawing-([0-9]+)$ drawing.php?drawingId=$3
-RewriteRule ^([a-z0-9\-]+)/([a-z0-9\-]+)/drawing-([0-9]+)/$ drawing.php?drawingId=$3
+
+# Matches Search
+RewriteRule ^search$ search.php
+
+# Matches Admin
+RewriteRule ^admin/?$ admin.php
+
+# Matches About
+RewriteRule ^about/?$ about.php
+
+# Matches Contact
+RewriteRule ^contact/?$ contact.php
+
+# Matches gallery
+RewriteRule ^gallery/?$ gallery.php
+
+# Matches university slug
+RewriteRule ^([a-z0-9\-]+)/?$ gallery.php?uni=$1
+
+# Matches university slug and professor slug
+RewriteRule ^([a-z0-9\-]+)/([a-z0-9\-]+)/?$ gallery.php?uni=$1&prof=$2
+
+# Matches university slug and professor slug and drawing id
+RewriteRule ^([a-z0-9\-]+)/([a-z0-9\-]+)/([a-z0-9\-]+)/?$ drawing.php?drawing=$3

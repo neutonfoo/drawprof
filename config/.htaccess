@@ -1,0 +1,2 @@
+# Deny Access to Admin pages
+Deny from all

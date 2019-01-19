@@ -9,7 +9,7 @@ if(isset($_GET['logout'])) {
   unset($_SESSION['adminEmail']);
   unset($_SESSION['adminIsSuperAdmin']);
 
-  header("Location: admin.php?logout=1");
+  header("Location: admin?logout=1");
 } else if(isset($_POST['loggingIn'])) {
   // Logging in
 

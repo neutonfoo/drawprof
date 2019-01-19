@@ -11,7 +11,7 @@ if(isset($_POST['formSubmit'])) {
   }
 
   // To prevent accidental form refresh
-  header("Location: admin.php?page=approvesubmissions");
+  header("Location: $base_url/admin?page=approvesubmissions");
 }
 ?>
 
@@ -50,18 +50,15 @@ if ($stmt->rowCount() == 0) {
       ?>
       <div class="col-xs-12 col-sm-6 col-md-3 col-lg-2">
         <div class="card my-2">
-          <a href="<?=$base_url . "drawing.php?drawing=$drawingId"; ?>">
-            <img src="drawings/<?=$drawingFilename; ?>" class="card-img-top border-bottom" alt="...">
+          <a href="<?=$base_url;  ?>/<?=$uniSlug; ?>/<?=$profSlug; ?>/<?=$drawingId; ?>">
+            <img src="<?=$base_url; ?>/drawings/<?=$drawingFilename; ?>" class="card-img-top border-bottom" alt="...">
           </a>
           <div class="card-body">
             <h5 class="card-title">
-              <a href="<?=$base_url;  ?>gallery.php?prof=<?=$profId; ?>" class="text-secondary"><?=$profName; ?>
-              </a>
+              <a href="<?=$base_url;  ?>/<?=$uniSlug; ?>/<?=$profSlug; ?>" class="text-secondary"><?=$profName; ?></a>
             </h5>
             <small class="text-muted">
-              <a href="<?=$base_url;  ?>gallery.php?uni=<?=$uniId; ?>" class="text-dark">
-                <?=$uniName; ?>
-              </a>
+              <a href="<?=$base_url;  ?>/<?=$uniSlug; ?>" class="text-dark"><?=$uniName; ?></a>
             </small>
 
             <hr>
