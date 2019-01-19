@@ -28,6 +28,12 @@ $(document).ready(function() {
     canvas.height = desktopHeight
   }
 
+  if(loadFromTemp == false) {
+    ctx.beginPath();
+    ctx.rect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fill();
+  }
 
   // Set up mouse events for drawing
   var drawing = false;

@@ -1,7 +1,8 @@
 <?php
-function showHeader($title) {
+function showHeader($title, $meta = null) {
   global $base_url;
   global $show_analytics;
+  global $show_meta;
   ?>
   <!DOCTYPE html>
   <html lang="en" dir="ltr">
@@ -13,8 +14,24 @@ function showHeader($title) {
       <script type="text/javascript" src="<?=$base_url; ?>/js/jquery-3.3.1.min.js"></script>
       <script type="text/javascript" src="<?=$base_url; ?>/js/bootstrap.min.js"></script>
       <link rel="stylesheet" href="<?=$base_url; ?>/css/master.css">
-
       <?php
+
+        if(!is_null($meta) && $show_meta) {
+          foreach($meta as $metaProperty => $metaAttributes) {
+            ?>
+            <meta property="<?=$metaProperty; ?>"
+            <?php
+            foreach($metaAttributes as $metaAttributeName => $metaAttributeValue) {
+              ?>
+              <?=$metaAttributeName; ?>="<?=$metaAttributeValue; ?>"
+              <?php
+            }
+            ?>
+            >
+            <?php
+          }
+        }
+
         if($show_analytics) {
           ?>
           <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -59,7 +76,7 @@ function showHeader($title) {
             <!-- Main Alert -->
             <div class="alert alert-info" role="alert">
               <div class="h4 alert-heading">Announcement</div>
-              <p class="mb-0">DrawProf is currently in <b>Closed Beta</b>. We are working on optimizing mobile support. The site may occasionally go down for maintenance.</p>
+              <p class="mb-0">DrawProf is currently in <b>Open Beta</b> 🎉🎉🎉. The site may occasionally go down for maintenance.</p>
                 <!-- You can send all bug reports to our email <a href="mailto:drawprof@salhacks.com?Subject=About%DrawProf" class="alert-link ">drawprof@salhacks.com</a>. -->
             </div>
           </div>

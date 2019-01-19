@@ -1,7 +1,24 @@
 <?php
 require 'config.php';
 
-showHeader('Home');
+// Constructing Meta Tags
+$title = "Draw Your Professors";
+$meta = [];
+
+$meta['og:url'] = [];
+$meta['og:url']['content'] = $base_url;
+
+$meta['og:type'] = [];
+$meta['og:type']['content'] = "article";
+
+$meta['og:title'] = [];
+$meta['og:title']['content'] = $title;
+
+$meta['og:description'] = [];
+$meta['og:description']['content'] = "Draw your professors on DrawProf!";
+
+// Since only 1, safe to do this
+showHeader($title, $meta);
 
 ?>
 <div class="row">
@@ -66,6 +83,7 @@ showHeader('Home');
 if(isset($_SESSION['tempSavedDrawing'])) {
   ?>
   <script type="text/javascript">
+    var loadFromTemp = true;
     $(document).ready(function() {
       var canvas = document.getElementById('c');
 
@@ -83,6 +101,12 @@ if(isset($_SESSION['tempSavedDrawing'])) {
   </script>
   <?php
   unset($_SESSION['tempSavedDrawing']);
+} else {
+  ?>
+  <script type="text/javascript">
+    var loadFromTemp = false;
+  </script>
+  <?php
 }
 ?>
 

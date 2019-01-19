@@ -47,8 +47,27 @@ if(is_null($drawingId) || $drawingId == '') {
 
     $link = $base_url . "/$uniSlug/$profSlug/$drawingId";
 
+    // Constructing Meta Tags
+    $title = "$profName by $artist";
+    $meta = [];
+
+    $meta['og:url'] = [];
+    $meta['og:url']['content'] = $link;
+
+    $meta['og:type'] = [];
+    $meta['og:type']['content'] = "article";
+
+    $meta['og:title'] = [];
+    $meta['og:title']['content'] = $title;
+
+    $meta['og:description'] = [];
+    $meta['og:description']['content'] = "A drawing of $profName from $uniName by $artist on DrawProf!";
+
+    $meta['og:image'] = [];
+    $meta['og:image']['content'] = "$base_url/drawings/$drawingFilename";
+
     // Since only 1, safe to do this
-    showHeader("$profName by $artist");
+    showHeader($title, $meta);
 
     if($status == 1) {
       // If Approved, redirect to clean URL
