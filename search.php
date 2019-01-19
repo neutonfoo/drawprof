@@ -1,6 +1,5 @@
 <?php
-require 'requires/core.php';
-require 'dbconfig.php';
+require 'config.php';
 
 $query = $_GET['query'];
 

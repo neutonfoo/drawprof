@@ -1,5 +1,6 @@
 <?php
-require 'requires/core.php';
+require 'config.php';
+
 showHeader('Home');
 
 ?>
@@ -8,6 +9,28 @@ showHeader('Home');
     <div class="alert alert-warning" role="alert">Friendly reminder to keep submissions wholesome!</div>
   </div>
 </div>
+
+<?php
+  // Error with url through evil means like editting the code and stuff
+  if(isset($_GET['linkerror'])) {
+    ?>
+    <div class="row">
+      <div class="col">
+        <div class="alert alert-danger" role="alert">There was an error with your link.</div>
+      </div>
+    </div>
+    <?php
+  } else if(isset($_GET['sizeerror'])) {
+    ?>
+    <div class="row">
+      <div class="col">
+        <div class="alert alert-danger" role="alert">Do not alter the size of the canvas.</div>
+      </div>
+    </div>
+    <?php
+  }
+?>
+
 <!-- Professor URL -->
 <div class="row justify-content-center">
   <div class="col-md-8">
@@ -36,6 +59,32 @@ showHeader('Home');
     </div>
   </div>
 </div>
+
+<?php
+
+// To restore image in case of error
+if(isset($_SESSION['tempSavedDrawing'])) {
+  ?>
+  <script type="text/javascript">
+    $(document).ready(function() {
+      var canvas = document.getElementById('c');
+
+      function drawDataURIOnCanvas(imageDataURI) {
+        "use strict";
+        var img = new window.Image();
+        img.addEventListener("load", function () {
+          canvas.getContext("2d").drawImage(img, 0, 0);
+        });
+        img.setAttribute("src", imageDataURI);
+      }
+
+      drawDataURIOnCanvas("<?=$_SESSION['tempSavedDrawing']; ?>");
+    });
+  </script>
+  <?php
+  unset($_SESSION['tempSavedDrawing']);
+}
+?>
 
 <!-- Stroke Size Container -->
 <div class="row">
@@ -82,7 +131,7 @@ showHeader('Home');
 
   <!-- Fake Form -->
   <form id="submitForm" action="submit.php" method="post">
-    <input type="hidden" id="profUrlInput" name="profUrl" value="">
+    <input type="hidden" id="profRMPIdInput" name="profRMPId" value="">
     <input type="hidden" id="artistNameInput" name="artistName" value="">
     <input type="hidden" id="isMobileInput" name="isMobile" value="">
     <input type="hidden" id="imageDataUrlInput" name="imageDataUrl" value="">

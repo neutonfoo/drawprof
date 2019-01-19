@@ -32,7 +32,7 @@ if(isset($_GET['loginFailed'])) {
       <input type="password" class="form-control" id="adminPasswordInput" name="adminPassword" placeholder="Password">
     </div>
   </div>
-  <div class="form-row">
+  <div class="form-row my-3">
     <div class="form-group col-12">
       <input type="hidden" class="form-control" name="loggingIn" value="1">
       <button type="submit" class="btn btn-primary">Login</button>

@@ -1,6 +1,5 @@
 <?php
-require 'requires/core.php';
-require 'dbconfig.php';
+require 'config.php';
 
 $drawingId = NULL;
 
@@ -11,9 +10,22 @@ if(isset($_GET['drawing'])) {
 if(is_null($drawingId) || $drawingId == '') {
   header("Location: gallery.php");
 } else {
+
+  if(isset($_POST['formSubmit'])) {
+
+    $status = $_POST['drawing'];
+
+    $stmt = $conn->prepare("UPDATE drawprof_drawings SET status = ?, statusChangeAdminId = ?, statusChangeTime = ? WHERE drawingId = ?");
+    $stmt->execute([$status, $_SESSION['adminId'], time(), $drawingId]);
+  }
+
   // Drawing Spec
-  $stmt = $conn->prepare("SELECT drawingId, artist, submittedTime, status, profRMPId, profName, profSlug, uniName, uniSlug FROM drawprof_drawings JOIN drawprof_profs ON drawprof_drawings.profId = drawprof_profs.profId JOIN drawprof_unis ON drawprof_profs.uniId = drawprof_unis.uniId WHERE drawprof_drawings.drawingId = ? LIMIT 1");
+  $stmt = $conn->prepare("SELECT drawingId, artist, submittedTime, status, statusChangeTime, adminName, email, profRMPId, profName, profSlug, uniName, uniSlug FROM drawprof_drawings JOIN drawprof_profs ON drawprof_drawings.profId = drawprof_profs.profId JOIN drawprof_unis ON drawprof_profs.uniId = drawprof_unis.uniId LEFT JOIN drawprof_admins ON drawprof_admins.adminId = drawprof_drawings.statusChangeAdminId WHERE drawprof_drawings.drawingId = ? LIMIT 1");
   $stmt->execute([$drawingId]);
+
+  // if($stmt->rowCount() == 0) {
+  //   header("Location: gallery.php");
+  // }
 
   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $drawingId = $row['drawingId'];
@@ -26,6 +38,10 @@ if(is_null($drawingId) || $drawingId == '') {
     $profSlug = $row['profSlug'];
     $uniName = $row['uniName'];
     $uniSlug = $row['uniSlug'];
+
+    $adminName = $row['adminName'];
+    $adminEmail = $row['email'];
+    $statusChangeTime = $row['statusChangeTime'];
 
     $drawingFilename = "$uniSlug-$profSlug-$drawingId.png";
 
@@ -87,6 +103,100 @@ if(is_null($drawingId) || $drawingId == '') {
         </div>
       </div>
       <?php
+
+      if(isSuperAdmin()) {
+        if($status != 0) {
+          ?>
+          <!-- Status Change -->
+          <div class="row">
+            <div class="col-12 text-center">
+              <p>
+                <small>
+                  <?php
+                  if($status == 1) {
+                    ?>
+                    Approved By:
+                    <?php
+                  } else if($status == 2) {
+                    ?>
+                    Rejected By:
+                    <?php
+                  } else if($status == 3) {
+                    ?>
+                    Marked as <mark>unwholesome</mark> By:
+                    <?php
+                  }
+                  ?>
+                  <b><?=$adminName; ?></b> (<?=$adminEmail; ?>) on <u><em><?=parseTimestamp($statusChangeTime); ?></u></em>.
+                </small>
+              </p>
+            </div>
+          </div>
+          <hr>
+          <form id="vetoForm" method="post">
+            <div class="form-row">
+              <div class="col-12 text-center">
+                <p class="h4">Veto</p>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="col-12 text-center">
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input drawings_<?=$drawingId; ?>" type="radio" name="drawing" id="drawings_<?=$drawingId; ?>_approve" value="1" <?php if($status == 1) { ?>disabled<?php }?>>
+                  <label class="form-check-label" for="drawings_<?=$drawingId; ?>_approve">Approve</label>
+                </div>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="col-12 text-center">
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input drawings_<?=$drawingId; ?>" type="radio" name="drawing" id="drawings_<?=$drawingId; ?>_reject" value="2"<?php if($status == 2) { ?>disabled<?php }?>>
+                  <label class="form-check-label" for="drawings_<?=$drawingId; ?>_reject">Reject</label>
+                </div>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="col-12 text-center">
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input drawings_<?=$drawingId; ?>" type="radio" name="drawing" id="drawings_<?=$drawingId; ?>_pending" value="0"<?php if($status == 0) { ?>disabled<?php }?>>
+                  <label class="form-check-label" for="drawings_<?=$drawingId; ?>_pending">Pending</label>
+                </div>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="col-12 text-center">
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input drawings_<?=$drawingId; ?>" type="radio" name="drawing" id="drawings_<?=$drawingId; ?>_unwholesome" value="3" <?php if($status == 3) { ?>disabled<?php }?>>
+                  <label class="form-check-label" for="drawings_<?=$drawingId; ?>_unwholesome">Unwholesome</label>
+                </div>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="col-12 text-center">
+                <div class="form-check form-check-inline">
+                  <input type="hidden" name="formSubmit" value="1">
+                  <button type="button" id="vetoButton" class="btn btn-primary">VETO</button>
+                  <script type="text/javascript">
+                    $(document).ready(function() {
+                      $vetoForm = $('#vetoForm')
+                      $vetoButton = $('#vetoButton')
+
+                      $vetoButton.on('click', function() {
+                        if ($(".drawings_<?=$drawingId; ?>:checked").length == 0) {
+                          alert('Click a status to veto this submission.')
+                        } else {
+                          $vetoForm.submit()
+                        }
+                      })
+                    })
+                  </script>
+                </div>
+              </div>
+            </div>
+          </form>
+          <?php
+        }
+      }
     }
   }
 }

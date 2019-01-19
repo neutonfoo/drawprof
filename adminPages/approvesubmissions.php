@@ -9,6 +9,9 @@ if(isset($_POST['formSubmit'])) {
     $stmt = $conn->prepare("UPDATE drawprof_drawings SET status = ?, statusChangeAdminId = ?, statusChangeTime = ? WHERE drawingId = ?");
     $stmt->execute([$status, $_SESSION['adminId'], time(), $drawingId]);
   }
+
+  // To prevent accidental form refresh
+  header("Location: admin.php?page=approvesubmissions");
 }
 ?>
 
@@ -20,7 +23,7 @@ if(isset($_POST['formSubmit'])) {
 </div>
 
 <?php
-$stmt = $conn->prepare("SELECT drawingId, drawprof_profs.profId, profName, profSlug, drawprof_unis.uniId, uniName, uniSlug FROM drawprof_drawings JOIN drawprof_profs ON drawprof_drawings.profId = drawprof_profs.profId JOIN drawprof_unis ON drawprof_profs.uniId = drawprof_unis.uniId WHERE drawprof_drawings.status = 0 ORDER BY drawingId ASC LIMIT 12");
+$stmt = $conn->prepare("SELECT drawingId, drawprof_profs.profId, profName, profSlug, drawprof_unis.uniId, uniName, uniSlug FROM drawprof_drawings JOIN drawprof_profs ON drawprof_drawings.profId = drawprof_profs.profId JOIN drawprof_unis ON drawprof_profs.uniId = drawprof_unis.uniId WHERE drawprof_drawings.status = 0 ORDER BY drawingId ASC LIMIT 6");
 $stmt->execute();
 
 if ($stmt->rowCount() == 0) {
@@ -93,18 +96,6 @@ if ($stmt->rowCount() == 0) {
           </div>
         </div>
       </div>
-
-
-
-        <!-- <div class="col-xs-12 col-sm-6 col-md-3 col-lg-2">
-          <div class="card my-2">
-            <img src="drawings/<?=$drawingFilename; ?>" class="card-img-top" alt="...">
-            <div class="card-body">
-              <h5 class="card-title"><?=$profName; ?></h5>
-              <p class="card-text"> from <u><?=$uniName; ?></u>.</p>
-            </div>
-          </div>
-        </div> -->
       <?php
     }
     ?>

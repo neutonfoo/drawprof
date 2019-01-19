@@ -1,5 +1,6 @@
 <?php
-require 'requires/core.php';
+require 'config.php';
+
 showHeader('Contact');
 ?>
 <div class="row justify-content-center">

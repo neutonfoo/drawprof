@@ -19,6 +19,9 @@ showHeader('Admin Panel');
   <div class="col-md-6">
     <h2>Account</h2>
     <div class="list-group list-group-flush">
+      <a href="?page=settings" class="list-group-item list-group-item-action">Settings</a>
+    </div>
+    <div class="list-group list-group-flush">
       <a href="?page=changepassword" class="list-group-item list-group-item-action">Change Password</a>
     </div>
     <?php if($_SESSION['adminIsSuperAdmin']) {

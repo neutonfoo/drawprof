@@ -1,6 +1,5 @@
 <?php
-require 'requires/core.php';
-require 'dbconfig.php';
+require 'config.php';
 
 // Initialize Core 2 Page Variables
 $filter = "sort";
@@ -35,7 +34,7 @@ if(!is_null($sort)) {
   $filter = "uni";
 
   // $stmt = $conn->prepare("SELECT drawingId, submittedTime, isMobile, profName, profSlug, uniName, uniSlug FROM drawprof_drawings INNER JOIN drawprof_profs ON drawprof_drawings.profId = drawprof_profs.profId INNER JOIN drawprof_unis ON drawprof_unis.uniId = ? LIMIT ? OFFSET ?");
-  $stmt = $conn->prepare("SELECT drawingId, submittedTime, isMobile, drawprof_profs.profId, profName, profSlug, drawprof_unis.uniId, uniName, uniSlug FROM drawprof_unis INNER JOIN drawprof_profs ON drawprof_profs.uniId = drawprof_unis.uniId INNER JOIN drawprof_drawings ON drawprof_drawings.profId = drawprof_profs.profId WHERE drawprof_unis.uniId = ? AND drawprof_drawings.status = 1 LIMIT ? OFFSET ?");
+  $stmt = $conn->prepare("SELECT drawingId, submittedTime, isMobile, drawprof_profs.profId, profName, profSlug, drawprof_unis.uniId, uniName, uniSlug FROM drawprof_unis INNER JOIN drawprof_profs ON drawprof_profs.uniId = drawprof_unis.uniId INNER JOIN drawprof_drawings ON drawprof_drawings.profId = drawprof_profs.profId WHERE drawprof_unis.uniId = ? AND drawprof_drawings.status = 1 ORDER BY submittedTime DESC LIMIT ? OFFSET ?");
   $stmt->bindParam(1, $uniId, PDO::PARAM_INT);
   $stmt->bindParam(2, $postsToLoad, PDO::PARAM_INT);
   $stmt->bindParam(3, $offset, PDO::PARAM_INT);
@@ -43,7 +42,7 @@ if(!is_null($sort)) {
   // If prof
   $filter = "prof";
 
-  $stmt = $conn->prepare("SELECT drawingId, submittedTime, isMobile, drawprof_profs.profId, profName, profSlug, drawprof_unis.uniId, uniName, uniSlug FROM drawprof_drawings INNER JOIN drawprof_profs ON drawprof_profs.profId = drawprof_drawings.profId INNER JOIN drawprof_unis ON drawprof_unis.uniId = drawprof_profs.uniId WHERE drawprof_drawings.profId = ? AND drawprof_drawings.status = 1 LIMIT ? OFFSET ?");
+  $stmt = $conn->prepare("SELECT drawingId, submittedTime, isMobile, drawprof_profs.profId, profName, profSlug, drawprof_unis.uniId, uniName, uniSlug FROM drawprof_drawings INNER JOIN drawprof_profs ON drawprof_profs.profId = drawprof_drawings.profId INNER JOIN drawprof_unis ON drawprof_unis.uniId = drawprof_profs.uniId WHERE drawprof_drawings.profId = ? AND drawprof_drawings.status = 1 ORDER BY submittedTime DESC LIMIT ? OFFSET ?");
   $stmt->bindParam(1, $profId, PDO::PARAM_INT);
   $stmt->bindParam(2, $postsToLoad, PDO::PARAM_INT);
   $stmt->bindParam(3, $offset, PDO::PARAM_INT);

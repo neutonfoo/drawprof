@@ -41,7 +41,7 @@ if(isset($_POST['formSubmit'])) {
       <input type="password" class="form-control" id="adminPasswordInput2" name="adminPassword2" placeholder="Confirm Password">
     </div>
   </div>
-  <div class="form-row">
+  <div class="form-row my-3">
     <div class="form-group col-12">
       <input type="hidden" name="formSubmit" value="1">
       <button type="submit" class="btn btn-primary">Change Password</button>

@@ -1,9 +1,4 @@
 <?php
-
-session_start();
-
-require 'env.php';
-
 function showHeader($title) {
   global $base_url;
   global $show_analytics;
@@ -122,6 +117,14 @@ function isSuperAdmin() {
   }
 
   return false;
+}
+
+function getAdminSetting($settingKey) {
+  if(array_key_exists($settingKey, $_SESSION['adminSettings'])) {
+    return true;
+  } else {
+    return false;
+  }
 }
 
 function parseTimestamp($timestamp) {
