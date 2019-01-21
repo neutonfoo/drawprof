@@ -46,7 +46,7 @@ if(isset($_POST['formSubmit'])) {
   <div class="form-row my-3">
     <div class="form-group col-12">
       <input type="hidden" name="formSubmit" value="1">
-      <button type="submit" class="btn btn-primary">Create</button>
+      <button type="submit" class="btn btn-primary">Update</button>
     </div>
   </div>
 </form>

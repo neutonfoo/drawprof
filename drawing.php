@@ -13,14 +13,21 @@ if(is_null($drawingId) || $drawingId == '') {
 
   if(isset($_POST['formSubmit'])) {
 
-    $status = $_POST['drawing'];
+    if(isset($_POST['drawing_hide'])) {
+      $isHidden = $_POST['drawing_hide'];
 
-    $stmt = $conn->prepare("UPDATE drawprof_drawings SET status = ?, statusChangeAdminId = ?, statusChangeTime = ? WHERE drawingId = ?");
-    $stmt->execute([$status, $_SESSION['adminId'], time(), $drawingId]);
+      $stmt = $conn->prepare("UPDATE drawprof_drawings SET isHidden = ? WHERE drawingId = ?");
+      $stmt->execute([$isHidden, $drawingId]);
+    } else {
+      $status = $_POST['drawing'];
+
+      $stmt = $conn->prepare("UPDATE drawprof_drawings SET status = ?, statusChangeAdminId = ?, statusChangeTime = ? WHERE drawingId = ?");
+      $stmt->execute([$status, $_SESSION['adminId'], time(), $drawingId]);
+    }
   }
 
   // Drawing Spec
-  $stmt = $conn->prepare("SELECT drawingId, artist, submittedTime, status, statusChangeTime, adminName, email, profRMPId, profName, profSlug, uniName, uniSlug FROM drawprof_drawings JOIN drawprof_profs ON drawprof_drawings.profId = drawprof_profs.profId JOIN drawprof_unis ON drawprof_profs.uniId = drawprof_unis.uniId LEFT JOIN drawprof_admins ON drawprof_admins.adminId = drawprof_drawings.statusChangeAdminId WHERE drawprof_drawings.drawingId = ? LIMIT 1");
+  $stmt = $conn->prepare("SELECT drawingId, artist, submittedTime, status, isHidden, statusChangeTime, adminName, email, profRMPId, profName, profSlug, uniName, uniSlug FROM drawprof_drawings JOIN drawprof_profs ON drawprof_drawings.profId = drawprof_profs.profId JOIN drawprof_unis ON drawprof_profs.uniId = drawprof_unis.uniId LEFT JOIN drawprof_admins ON drawprof_admins.adminId = drawprof_drawings.statusChangeAdminId WHERE drawprof_drawings.drawingId = ? LIMIT 1");
   $stmt->execute([$drawingId]);
 
   // if($stmt->rowCount() == 0) {
@@ -32,6 +39,7 @@ if(is_null($drawingId) || $drawingId == '') {
     $artist = $row['artist'] == '' ? 'anonymous' : $row['artist'];
     $submittedTime = $row['submittedTime'];
     $status = $row['status'];
+    $isHidden = $row['isHidden'];
 
     $profRMPId = $row['profRMPId'];
     $profName = $row['profName'];
@@ -162,6 +170,39 @@ if(is_null($drawingId) || $drawingId == '') {
               </p>
             </div>
           </div>
+          <?php
+
+          if($status == 2 || $status == 3) {
+            ?>
+            <hr>
+            <form id="hideForm" method="post">
+              <div class="form-row">
+                <div class="col-12 text-center">
+                  <p class="h4">Hide</p>
+                  <p>Only rejected or <mark>unwholesome</mark> posts can be hidden.</p>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="col-12 text-center">
+                  <div class="form-check">
+                    <input class="form-check-input" type="hidden" name="drawing_hide" value="0">
+                    <input class="form-check-input" type="checkbox" id="drawings_<?=$drawingId; ?>_hide" name="drawing_hide" <?php if($isHidden) { ?>checked<?php }?> value="1">
+                    <label class="form-check-label" for="drawings_<?=$drawingId; ?>_hide" name="drawing_hide">Hide</label>
+                  </div>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="col-12 text-center">
+                  <div class="form-check form-check-inline">
+                    <input type="hidden" name="formSubmit" value="1">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                  </div>
+                </div>
+              </div>
+            </form>
+            <?php
+          }
+          ?>
           <hr>
           <form id="vetoForm" method="post">
             <div class="form-row">
@@ -205,7 +246,7 @@ if(is_null($drawingId) || $drawingId == '') {
               <div class="col-12 text-center">
                 <div class="form-check form-check-inline">
                   <input type="hidden" name="formSubmit" value="1">
-                  <button type="button" id="vetoButton" class="btn btn-primary">VETO</button>
+                  <button type="button" id="vetoButton" class="btn btn-primary">Veto</button>
                   <script type="text/javascript">
                     $(document).ready(function() {
                       $vetoForm = $('#vetoForm')

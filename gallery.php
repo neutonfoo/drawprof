@@ -45,7 +45,13 @@ if(!is_null($profSlug)) {
   // If prof
   $filter = "prof";
 
-  $stmt = $conn->prepare("SELECT drawingId, submittedTime, status, isMobile, drawprof_profs.profId, profName, profSlug, drawprof_unis.uniId, uniName, uniSlug FROM drawprof_profs INNER JOIN drawprof_unis ON drawprof_unis.uniId = drawprof_profs.uniId INNER JOIN drawprof_drawings ON drawprof_drawings.profId = drawprof_profs.profId WHERE drawprof_profs.profSlug = ? AND drawprof_drawings.status IN ($inQuery) ORDER BY submittedTime DESC LIMIT ? OFFSET ?");
+  if(getAdminSetting('showHiddenPostsInGalleryViews')) {
+    $stmt = $conn->prepare("SELECT drawingId, submittedTime, status, isMobile, drawprof_profs.profId, profName, profSlug, drawprof_unis.uniId, uniName, uniSlug FROM drawprof_profs INNER JOIN drawprof_unis ON drawprof_unis.uniId = drawprof_profs.uniId INNER JOIN drawprof_drawings ON drawprof_drawings.profId = drawprof_profs.profId WHERE drawprof_profs.profSlug = ? AND drawprof_drawings.status IN ($inQuery) ORDER BY submittedTime DESC LIMIT ? OFFSET ?");
+  } else {
+    $stmt = $conn->prepare("SELECT drawingId, submittedTime, status, isMobile, drawprof_profs.profId, profName, profSlug, drawprof_unis.uniId, uniName, uniSlug FROM drawprof_profs INNER JOIN drawprof_unis ON drawprof_unis.uniId = drawprof_profs.uniId INNER JOIN drawprof_drawings ON drawprof_drawings.profId = drawprof_profs.profId WHERE drawprof_profs.profSlug = ? AND drawprof_drawings.status IN ($inQuery) AND drawprof_drawings.isHidden = 0 ORDER BY submittedTime DESC LIMIT ? OFFSET ?");
+  }
+
+  // $stmt = $conn->prepare("SELECT drawingId, submittedTime, status, isMobile, drawprof_profs.profId, profName, profSlug, drawprof_unis.uniId, uniName, uniSlug FROM drawprof_profs INNER JOIN drawprof_unis ON drawprof_unis.uniId = drawprof_profs.uniId INNER JOIN drawprof_drawings ON drawprof_drawings.profId = drawprof_profs.profId WHERE drawprof_profs.profSlug = ? AND drawprof_drawings.status IN ($inQuery) ORDER BY submittedTime DESC LIMIT ? OFFSET ?");
 
   $stmt->bindParam(1, $profSlug, PDO::PARAM_STR);
   foreach($displaySubmissionStatuses as $parameterId => $submissionStatus) {
@@ -59,7 +65,12 @@ if(!is_null($profSlug)) {
   // If uni
   $filter = "uni";
 
-  $stmt = $conn->prepare("SELECT drawingId, submittedTime, status, isMobile, drawprof_profs.profId, profName, profSlug, drawprof_unis.uniId, uniName, uniSlug FROM drawprof_unis INNER JOIN drawprof_profs ON drawprof_profs.uniId = drawprof_unis.uniId INNER JOIN drawprof_drawings ON drawprof_drawings.profId = drawprof_profs.profId WHERE drawprof_unis.uniSlug = ? AND drawprof_drawings.status IN ($inQuery) ORDER BY submittedTime DESC LIMIT ? OFFSET ?");
+  if(getAdminSetting('showHiddenPostsInGalleryViews')) {
+    $stmt = $conn->prepare("SELECT drawingId, submittedTime, status, isMobile, drawprof_profs.profId, profName, profSlug, drawprof_unis.uniId, uniName, uniSlug FROM drawprof_unis INNER JOIN drawprof_profs ON drawprof_profs.uniId = drawprof_unis.uniId INNER JOIN drawprof_drawings ON drawprof_drawings.profId = drawprof_profs.profId WHERE drawprof_unis.uniSlug = ? AND drawprof_drawings.status IN ($inQuery) ORDER BY submittedTime DESC LIMIT ? OFFSET ?");
+  } else {
+    $stmt = $conn->prepare("SELECT drawingId, submittedTime, status, isMobile, drawprof_profs.profId, profName, profSlug, drawprof_unis.uniId, uniName, uniSlug FROM drawprof_unis INNER JOIN drawprof_profs ON drawprof_profs.uniId = drawprof_unis.uniId INNER JOIN drawprof_drawings ON drawprof_drawings.profId = drawprof_profs.profId WHERE drawprof_unis.uniSlug = ? AND drawprof_drawings.status AND drawprof_drawings.isHidden = 0 IN ($inQuery) ORDER BY submittedTime DESC LIMIT ? OFFSET ?");
+  }
+
   $stmt->bindParam(1, $uniSlug, PDO::PARAM_STR);
 
   foreach($displaySubmissionStatuses as $parameterId => $submissionStatus) {
@@ -73,11 +84,15 @@ if(!is_null($profSlug)) {
   // Display all by recent by default
   $filter = "sort";
 
-  $stmt = $conn->prepare("SELECT drawingId, submittedTime, status, isMobile, drawprof_profs.profId, profName, profSlug, drawprof_unis.uniId, uniName, uniSlug FROM drawprof_drawings, drawprof_unis, drawprof_profs WHERE drawprof_drawings.status IN ($inQuery) AND drawprof_drawings.profId = drawprof_profs.profId AND drawprof_profs.uniId = drawprof_unis.uniId ORDER BY submittedTime DESC LIMIT ? OFFSET ?");
+  if(getAdminSetting('showHiddenPostsInGalleryViews')) {
+    $stmt = $conn->prepare("SELECT drawingId, submittedTime, status, isMobile, drawprof_profs.profId, profName, profSlug, drawprof_unis.uniId, uniName, uniSlug FROM drawprof_drawings, drawprof_unis, drawprof_profs WHERE drawprof_drawings.status IN ($inQuery) AND drawprof_drawings.profId = drawprof_profs.profId AND drawprof_profs.uniId = drawprof_unis.uniId ORDER BY submittedTime DESC LIMIT ? OFFSET ?");
+  } else {
+    $stmt = $conn->prepare("SELECT drawingId, submittedTime, status, isMobile, drawprof_profs.profId, profName, profSlug, drawprof_unis.uniId, uniName, uniSlug FROM drawprof_drawings, drawprof_unis, drawprof_profs WHERE drawprof_drawings.status IN ($inQuery) AND drawprof_drawings.profId = drawprof_profs.profId AND drawprof_profs.uniId = drawprof_unis.uniId AND drawprof_drawings.isHidden = 0 ORDER BY submittedTime DESC LIMIT ? OFFSET ?");
+  }
+
   foreach($displaySubmissionStatuses as $parameterId => $submissionStatus) {
     $stmt->bindValue(($parameterId + 1), $submissionStatus, PDO::PARAM_INT);
   }
-
 
   $stmt->bindParam($numberOfSubmissionStatuses + 1, $postsToLoad, PDO::PARAM_INT);
   $stmt->bindParam($numberOfSubmissionStatuses + 2, $offset, PDO::PARAM_INT);
