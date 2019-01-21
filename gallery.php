@@ -6,7 +6,7 @@ $filter = "sort";
 $page = 1;
 
 // Initialize Variables from GET
-$sort = isset($_GET['sort']) ? $_GET['sort'] : NULL;
+$sort = isset($_GET['sort']) ? $_GET['sort'] : "new";
 $page = isset($_GET['page']) ? $_GET['page'] : NULL;
 $uniSlug = isset($_GET['uni']) ? $_GET['uni'] : NULL;
 $profSlug = isset($_GET['prof']) ? $_GET['prof'] : NULL;
@@ -94,10 +94,25 @@ if(!is_null($profSlug)) {
   // Display all by recent by default
   $filter = "sort";
 
-  if(getAdminSetting('showHiddenPostsInGalleryViews')) {
-    $stmt = $conn->prepare("SELECT drawingId, submittedTime, status, isMobile, drawprof_profs.profId, profName, profSlug, drawprof_unis.uniId, uniName, uniSlug FROM drawprof_drawings, drawprof_unis, drawprof_profs WHERE drawprof_drawings.status IN ($inQuery) AND drawprof_drawings.profId = drawprof_profs.profId AND drawprof_profs.uniId = drawprof_unis.uniId ORDER BY submittedTime DESC LIMIT ? OFFSET ?");
+  if($sort == "new") {
+    if(getAdminSetting('showHiddenPostsInGalleryViews')) {
+      $stmt = $conn->prepare("SELECT drawingId, submittedTime, status, isMobile, drawprof_profs.profId, profName, profSlug, drawprof_unis.uniId, uniName, uniSlug FROM drawprof_drawings, drawprof_unis, drawprof_profs WHERE drawprof_drawings.status IN ($inQuery) AND drawprof_drawings.profId = drawprof_profs.profId AND drawprof_profs.uniId = drawprof_unis.uniId ORDER BY submittedTime DESC LIMIT ? OFFSET ?");
+    } else {
+      $stmt = $conn->prepare("SELECT drawingId, submittedTime, status, isMobile, drawprof_profs.profId, profName, profSlug, drawprof_unis.uniId, uniName, uniSlug FROM drawprof_drawings, drawprof_unis, drawprof_profs WHERE drawprof_drawings.status IN ($inQuery) AND drawprof_drawings.profId = drawprof_profs.profId AND drawprof_profs.uniId = drawprof_unis.uniId AND drawprof_drawings.isHidden = 0 ORDER BY submittedTime DESC LIMIT ? OFFSET ?");
+    }
+  } else if($sort == "top") {
+    if(getAdminSetting('showHiddenPostsInGalleryViews')) {
+      $stmt = $conn->prepare("SELECT drawingId, submittedTime, status, isMobile, drawprof_profs.profId, profName, profSlug, drawprof_unis.uniId, uniName, uniSlug FROM drawprof_drawings, drawprof_unis, drawprof_profs WHERE drawprof_drawings.status IN ($inQuery) AND drawprof_drawings.profId = drawprof_profs.profId AND drawprof_profs.uniId = drawprof_unis.uniId ORDER BY likes DESC LIMIT ? OFFSET ?");
+    } else {
+      $stmt = $conn->prepare("SELECT drawingId, submittedTime, status, isMobile, drawprof_profs.profId, profName, profSlug, drawprof_unis.uniId, uniName, uniSlug FROM drawprof_drawings, drawprof_unis, drawprof_profs WHERE drawprof_drawings.status IN ($inQuery) AND drawprof_drawings.profId = drawprof_profs.profId AND drawprof_profs.uniId = drawprof_unis.uniId AND drawprof_drawings.isHidden = 0 ORDER BY likes DESC LIMIT ? OFFSET ?");
+    }
   } else {
-    $stmt = $conn->prepare("SELECT drawingId, submittedTime, status, isMobile, drawprof_profs.profId, profName, profSlug, drawprof_unis.uniId, uniName, uniSlug FROM drawprof_drawings, drawprof_unis, drawprof_profs WHERE drawprof_drawings.status IN ($inQuery) AND drawprof_drawings.profId = drawprof_profs.profId AND drawprof_profs.uniId = drawprof_unis.uniId AND drawprof_drawings.isHidden = 0 ORDER BY submittedTime DESC LIMIT ? OFFSET ?");
+    // Default to new
+    if(getAdminSetting('showHiddenPostsInGalleryViews')) {
+      $stmt = $conn->prepare("SELECT drawingId, submittedTime, status, isMobile, drawprof_profs.profId, profName, profSlug, drawprof_unis.uniId, uniName, uniSlug FROM drawprof_drawings, drawprof_unis, drawprof_profs WHERE drawprof_drawings.status IN ($inQuery) AND drawprof_drawings.profId = drawprof_profs.profId AND drawprof_profs.uniId = drawprof_unis.uniId ORDER BY submittedTime DESC LIMIT ? OFFSET ?");
+    } else {
+      $stmt = $conn->prepare("SELECT drawingId, submittedTime, status, isMobile, drawprof_profs.profId, profName, profSlug, drawprof_unis.uniId, uniName, uniSlug FROM drawprof_drawings, drawprof_unis, drawprof_profs WHERE drawprof_drawings.status IN ($inQuery) AND drawprof_drawings.profId = drawprof_profs.profId AND drawprof_profs.uniId = drawprof_unis.uniId AND drawprof_drawings.isHidden = 0 ORDER BY submittedTime DESC LIMIT ? OFFSET ?");
+    }
   }
 
   // Creating Sort Meta Tags
@@ -180,7 +195,12 @@ if($numberOfPosts == 0) {
         $title = "";
 
         if($filter == "sort") {
-          $title = "Recent";
+
+          if($sort == "new") {
+            $title = "New";
+          } else if($sort == "top") {
+            $title = "Top";
+          }
 
           $meta['og:title'] = [];
           $meta['og:title']['content'] = "Recent Drawings of Professors!";

@@ -101,7 +101,7 @@
         }
 
         // Insert drawing
-        $stmt = $conn->prepare("INSERT INTO drawprof_drawings (profId, artist, submittedTime, isMobile, status, isHidden, statusChangeAdminId, statusChangeTime, IPAddress) VALUES(?, ?, ?, ?, 0, 0, 0, 0, ?)");
+        $stmt = $conn->prepare("INSERT INTO drawprof_drawings (profId, artist, submittedTime, isMobile, status, isHidden, statusChangeAdminId, statusChangeTime, IPAddress, likes) VALUES(?, ?, ?, ?, 0, 0, 0, 0, ?, 0)");
         $stmt->execute([$profId, trim($artist), time(), $isMobile, getRealIpAddr()]);
 
         $drawingId = $conn->lastInsertId();

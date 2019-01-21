@@ -7,13 +7,25 @@ if(isset($_GET['drawing'])) {
   $drawingId = $_GET['drawing'];
 }
 
+
 if(is_null($drawingId) || $drawingId == '') {
-  header("Location: gallery.php");
+  // header("Location: gallery");
 } else {
 
   if(isset($_POST['formSubmit'])) {
 
-    if(isset($_POST['drawing_hide'])) {
+    if(isset($_POST['like'])) {
+      // Like Button
+
+      if(!in_array($drawingId, $_SESSION['likedDrawings'])) {
+        $stmt = $conn->prepare("UPDATE drawprof_drawings SET likes = likes + 1 WHERE drawingId = ?");
+        $stmt->execute([$drawingId]);
+
+        $_SESSION['likedDrawings'][] = $drawingId;
+      }
+
+    } else if(isset($_POST['drawing_hide'])) {
+      // Hide Drawing
       $isHidden = $_POST['drawing_hide'];
 
       $stmt = $conn->prepare("UPDATE drawprof_drawings SET isHidden = ? WHERE drawingId = ?");
@@ -27,7 +39,7 @@ if(is_null($drawingId) || $drawingId == '') {
   }
 
   // Drawing Spec
-  $stmt = $conn->prepare("SELECT drawingId, artist, submittedTime, status, isHidden, statusChangeTime, adminName, email, profRMPId, profName, profSlug, uniName, uniSlug FROM drawprof_drawings JOIN drawprof_profs ON drawprof_drawings.profId = drawprof_profs.profId JOIN drawprof_unis ON drawprof_profs.uniId = drawprof_unis.uniId LEFT JOIN drawprof_admins ON drawprof_admins.adminId = drawprof_drawings.statusChangeAdminId WHERE drawprof_drawings.drawingId = ? LIMIT 1");
+  $stmt = $conn->prepare("SELECT drawingId, artist, submittedTime, status, isHidden, statusChangeTime, likes, adminName, email, profRMPId, profName, profSlug, uniName, uniSlug FROM drawprof_drawings JOIN drawprof_profs ON drawprof_drawings.profId = drawprof_profs.profId JOIN drawprof_unis ON drawprof_profs.uniId = drawprof_unis.uniId LEFT JOIN drawprof_admins ON drawprof_admins.adminId = drawprof_drawings.statusChangeAdminId WHERE drawprof_drawings.drawingId = ? LIMIT 1");
   $stmt->execute([$drawingId]);
 
   // if($stmt->rowCount() == 0) {
@@ -40,6 +52,7 @@ if(is_null($drawingId) || $drawingId == '') {
     $submittedTime = $row['submittedTime'];
     $status = $row['status'];
     $isHidden = $row['isHidden'];
+    $likes = $row['likes'];
 
     $profRMPId = $row['profRMPId'];
     $profName = $row['profName'];
@@ -140,6 +153,29 @@ if(is_null($drawingId) || $drawingId == '') {
           <p><small>Submitted On: <u><em><?=parseTimestamp($submittedTime); ?></em></u>.</small></p>
         </div>
       </div>
+
+      <!-- Like Button -->
+      <form method="post">
+        <div class="row">
+          <div class="col-12 text-center">
+            <small class="text-dark"><?=$likes; ?> Like<?php if($likes != 1) { ?>s<?php } ?></small>
+            <?php
+            if(in_array($drawingId, $_SESSION['likedDrawings'])) {
+              ?>
+              <button type="button" class="btn btn-secondary btn-sm align-baseline p-1" disabled>Already Liked</button>
+              <?php
+            } else {
+              ?>
+              <input type="hidden" name="like" value="1">
+              <input type="hidden" name="formSubmit" value="1">
+              <button type="submit" class="btn btn-primary btn-sm align-baseline p-1">Like</button>
+            </form>
+            <?php
+          }
+          ?>
+        </div>
+      </div>
+
       <?php
 
       if(isSuperAdmin()) {

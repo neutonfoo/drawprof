@@ -62,7 +62,10 @@ function showHeader($title, $meta = null) {
         <div class="collapse navbar-collapse" id="collapsibleNavbar">
           <ul class="navbar-nav mr-auto">
             <li class="nav-item">
-              <a class="nav-link" href="<?=$base_url; ?>/gallery">Recent</a>
+              <a class="nav-link" href="<?=$base_url; ?>/gallery/top">Top</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="<?=$base_url; ?>/gallery/new">New</a>
             </li>
           </ul>
           <form class="form-inline" action="<?=$base_url; ?>/search" method="GET">
@@ -147,6 +150,11 @@ function isSuperAdmin() {
 }
 
 function getAdminSetting($settingKey) {
+
+  if(!isset($_SESSION['adminSettings'])) {
+    return false;
+  }
+
   if(array_key_exists($settingKey, $_SESSION['adminSettings'])) {
     return true;
   } else {
