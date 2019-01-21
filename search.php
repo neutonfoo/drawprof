@@ -18,7 +18,7 @@ if(strlen($query) < 5) {
 <div class="row justify-content-center">
   <div class="col-md-8">
     <h1>Search Results for&nbsp;<mark><?=$query; ?></mark></h1>
-    <p class="lead">Search results have been limited to 10 results during <b>Closed Beta</b>.</p>
+    <p class="lead">Search results have been limited to 10 results during <b>Open Beta</b>.</p>
   </div>
 </div>
 

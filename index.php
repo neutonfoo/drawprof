@@ -2,7 +2,7 @@
 require 'config.php';
 
 // Constructing Meta Tags
-$title = "Draw Your Professors";
+$title = "Draw Your Professors!";
 $meta = [];
 
 $meta['og:url'] = [];

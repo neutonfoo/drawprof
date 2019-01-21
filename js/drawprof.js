@@ -168,6 +168,7 @@ $(document).ready(function() {
 
           // 404 or Invalid link
           if(response == 'NULL') {
+            profRMPId = null
             alert('Not a valid URL.')
           } else {
             var titleSections = response.split('|')

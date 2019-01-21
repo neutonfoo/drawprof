@@ -32,12 +32,12 @@ showHeader('Admin Panel');
       <div class="list-group list-group-flush">
         <a href="?page=manageadminaccounts" class="list-group-item list-group-item-action">Manage Admin Accounts</a>
       </div>
-      <div class="list-group list-group-flush">
-        <a href="?page=todo" class="list-group-item list-group-item-action">Todo</a>
-      </div>
       <?php
     }
     ?>
+    <div class="list-group list-group-flush">
+      <a href="?page=milestones" class="list-group-item list-group-item-action">Milestones</a>
+    </div>
   </div>
 </div>
 <?php

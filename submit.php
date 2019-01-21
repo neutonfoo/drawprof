@@ -12,16 +12,29 @@
     return trim($z, '-');
   }
 
+  function getRealIpAddr() {
+    if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+      $ip = $_SERVER['HTTP_CLIENT_IP'];
+    } else if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+      $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+    } else {
+      $ip = $_SERVER['REMOTE_ADDR'];
+    }
+    return $ip;
+  }
+
+
   // Store it in a session temporarily
   if(isset($_POST['imageDataUrl'])) {
     // So drawing not lost
     $_SESSION['tempSavedDrawing'] = $_POST['imageDataUrl'];
   }
 
-  echo $profRMPId;
+  // Get Prof Name
+  $fetchedProfMeta = getProfMeta($profRMPId);
 
   // If invalid URL - $profRMPId defined in profGetter.php
-  if(!is_numeric($profRMPId)) {
+  if($fetchedProfMeta == "NULL") {
     header("Location: index.php?linkerror=1");
   } else {
 
@@ -29,7 +42,6 @@
     $imageDataUrl = $_POST['imageDataUrl'];
     $isMobile = $_POST['isMobile'];
 
-    // Get Prof Name
     $profMeta = explode("|", getProfMeta($profRMPId));
     $profName = $profMeta[0];
     $uniName = $profMeta[1];
@@ -89,8 +101,8 @@
         }
 
         // Insert drawing
-        $stmt = $conn->prepare("INSERT INTO drawprof_drawings (profId, artist, submittedTime, isMobile, status, statusChangeAdminId, statusChangeTime) VALUES(?, ?, ?, ?, 0, 0, 0)");
-        $stmt->execute([$profId, trim($artist), time(), $isMobile]);
+        $stmt = $conn->prepare("INSERT INTO drawprof_drawings (profId, artist, submittedTime, isMobile, status, statusChangeAdminId, statusChangeTime, IPAddress) VALUES(?, ?, ?, ?, 0, 0, 0, ?)");
+        $stmt->execute([$profId, trim($artist), time(), $isMobile, getRealIpAddr()]);
 
         $drawingId = $conn->lastInsertId();
 

@@ -12,7 +12,7 @@ if(isset($_POST['formSubmit'])) {
     $adminIsSuperAdminInput = 1;
   }
 
-  $stmt = $conn->prepare("INSERT INTO drawprof_admins (timeCreated, adminName, email, passwordHash, isSuperAdmin, parentAdminId) VALUES (?,?,?,?,?,?)");
+  $stmt = $conn->prepare("INSERT INTO drawprof_admins (timeCreated, adminName, email, passwordHash, isSuperAdmin, parentAdminId, settingsJSON) VALUES (?,?,?,?,?,?,'')");
   $stmt->execute([time(), $adminName, $adminEmail, md5($adminPassword), $adminIsSuperAdminInput, $_SESSION['adminId']]);
 
   ?>

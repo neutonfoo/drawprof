@@ -9,6 +9,8 @@ function showHeader($title, $meta = null) {
     <head>
       <meta charset="utf-8">
       <title><?=$title; ?> | DrawProf</title>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+      <meta name="description" content="Show off your artistic and creative abilities and draw your college professors on DrawProf!">
       <meta name="viewport" content="width=device-width, initial-scale=1">
       <link rel="stylesheet" href="<?=$base_url; ?>/css/bootstrap.min.css"/>
       <script type="text/javascript" src="<?=$base_url; ?>/js/jquery-3.3.1.min.js"></script>
@@ -34,6 +36,7 @@ function showHeader($title, $meta = null) {
 
         if($show_analytics) {
           ?>
+          <meta name="google-site-verification" content="sJGnP-uRxCx719xhBxUiqA45-DYNhvrtynTT4_SJHqw" />
           <!-- Global site tag (gtag.js) - Google Analytics -->
           <script async src="https://www.googletagmanager.com/gtag/js?id=UA-132697667-2"></script>
           <script>
@@ -76,7 +79,7 @@ function showHeader($title, $meta = null) {
             <!-- Main Alert -->
             <div class="alert alert-info" role="alert">
               <div class="h4 alert-heading">Announcement</div>
-              <p class="mb-0">DrawProf is currently in <b>Open Beta</b> 🎉🎉🎉. The site may occasionally go down for maintenance.</p>
+              <p class="mb-0">DrawProf is currently in <b>Open Beta</b> 🎉🎉🎉</p>
                 <!-- You can send all bug reports to our email <a href="mailto:drawprof@salhacks.com?Subject=About%DrawProf" class="alert-link ">drawprof@salhacks.com</a>. -->
             </div>
           </div>
@@ -113,7 +116,7 @@ function showFooter() {
               if(isset($_SESSION['adminId'])) {
                 ?>
                 <span class="mx-2">&bull;</span>
-                <a href="login.php?logout=1" class="p-1 bg-warning text-dark">Logout</a>
+                <a href="<?=$base_url?>/login.php?logout=1" class="p-1 bg-warning text-dark">Logout</a>
               <?php
               }
               ?>

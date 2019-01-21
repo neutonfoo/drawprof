@@ -60,11 +60,14 @@ if(is_null($drawingId) || $drawingId == '') {
     $meta['og:title'] = [];
     $meta['og:title']['content'] = $title;
 
-    $meta['og:description'] = [];
-    $meta['og:description']['content'] = "A drawing of $profName from $uniName by $artist on DrawProf!";
+    // Can't preview unwholesome posts
+    if($status != 3) {
+      $meta['og:description'] = [];
+      $meta['og:description']['content'] = "A drawing of $profName from $uniName by $artist on DrawProf!";
 
-    $meta['og:image'] = [];
-    $meta['og:image']['content'] = "$base_url/drawings/$drawingFilename";
+      $meta['og:image'] = [];
+      $meta['og:image']['content'] = "$base_url/drawings/$drawingFilename";
+    }
 
     // Since only 1, safe to do this
     showHeader($title, $meta);

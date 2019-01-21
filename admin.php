@@ -38,9 +38,9 @@ if(!isset($_SESSION['adminId'])) {
       // Admin Settings
       require 'adminPages/settings.php';
 
-    } else if($page == "todo") {
+    } else if($page == "milestones") {
       // Todo list
-      require 'adminPages/todo.php';
+      require 'adminPages/milestones.php';
 
     } else {
       header("Location: ?");
