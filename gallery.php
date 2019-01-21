@@ -17,6 +17,12 @@ if($page < 1) {
   $page = 1;
 }
 
+// Defaulting Meta Tags
+$meta = [];
+
+$meta['og:type'] = [];
+$meta['og:type']['content'] = "article";
+
 // Drawings Offset for SQL
 $offset = ($page - 1) * $posts_per_page;
 $postsToLoad = $posts_per_page + 1;
@@ -51,13 +57,14 @@ if(!is_null($profSlug)) {
     $stmt = $conn->prepare("SELECT drawingId, submittedTime, status, isMobile, drawprof_profs.profId, profName, profSlug, drawprof_unis.uniId, uniName, uniSlug FROM drawprof_profs INNER JOIN drawprof_unis ON drawprof_unis.uniId = drawprof_profs.uniId INNER JOIN drawprof_drawings ON drawprof_drawings.profId = drawprof_profs.profId WHERE drawprof_profs.profSlug = ? AND drawprof_drawings.status IN ($inQuery) AND drawprof_drawings.isHidden = 0 ORDER BY submittedTime DESC LIMIT ? OFFSET ?");
   }
 
-  // $stmt = $conn->prepare("SELECT drawingId, submittedTime, status, isMobile, drawprof_profs.profId, profName, profSlug, drawprof_unis.uniId, uniName, uniSlug FROM drawprof_profs INNER JOIN drawprof_unis ON drawprof_unis.uniId = drawprof_profs.uniId INNER JOIN drawprof_drawings ON drawprof_drawings.profId = drawprof_profs.profId WHERE drawprof_profs.profSlug = ? AND drawprof_drawings.status IN ($inQuery) ORDER BY submittedTime DESC LIMIT ? OFFSET ?");
+  // Creating Prof Meta Tags
+  $meta['og:url'] = [];
+  $meta['og:url']['content'] = "$base_url/$uniSlug/$profSlug";
 
   $stmt->bindParam(1, $profSlug, PDO::PARAM_STR);
   foreach($displaySubmissionStatuses as $parameterId => $submissionStatus) {
     $stmt->bindValue(($parameterId + 2), $submissionStatus, PDO::PARAM_INT);
   }
-
 
   $stmt->bindParam($numberOfSubmissionStatuses + 2, $postsToLoad, PDO::PARAM_INT);
   $stmt->bindParam($numberOfSubmissionStatuses + 3, $offset, PDO::PARAM_INT);
@@ -71,12 +78,15 @@ if(!is_null($profSlug)) {
     $stmt = $conn->prepare("SELECT drawingId, submittedTime, status, isMobile, drawprof_profs.profId, profName, profSlug, drawprof_unis.uniId, uniName, uniSlug FROM drawprof_unis INNER JOIN drawprof_profs ON drawprof_profs.uniId = drawprof_unis.uniId INNER JOIN drawprof_drawings ON drawprof_drawings.profId = drawprof_profs.profId WHERE drawprof_unis.uniSlug = ? AND drawprof_drawings.status AND drawprof_drawings.isHidden = 0 IN ($inQuery) ORDER BY submittedTime DESC LIMIT ? OFFSET ?");
   }
 
+  // Creating Uni Meta Tags
+  $meta['og:url'] = [];
+  $meta['og:url']['content'] = "$base_url/$uniSlug";
+
   $stmt->bindParam(1, $uniSlug, PDO::PARAM_STR);
 
   foreach($displaySubmissionStatuses as $parameterId => $submissionStatus) {
     $stmt->bindValue(($parameterId + 2), $submissionStatus, PDO::PARAM_INT);
   }
-
 
   $stmt->bindParam($numberOfSubmissionStatuses + 2, $postsToLoad, PDO::PARAM_INT);
   $stmt->bindParam($numberOfSubmissionStatuses + 3, $offset, PDO::PARAM_INT);
@@ -90,6 +100,10 @@ if(!is_null($profSlug)) {
     $stmt = $conn->prepare("SELECT drawingId, submittedTime, status, isMobile, drawprof_profs.profId, profName, profSlug, drawprof_unis.uniId, uniName, uniSlug FROM drawprof_drawings, drawprof_unis, drawprof_profs WHERE drawprof_drawings.status IN ($inQuery) AND drawprof_drawings.profId = drawprof_profs.profId AND drawprof_profs.uniId = drawprof_unis.uniId AND drawprof_drawings.isHidden = 0 ORDER BY submittedTime DESC LIMIT ? OFFSET ?");
   }
 
+  // Creating Sort Meta Tags
+  $meta['og:url'] = [];
+  $meta['og:url']['content'] = "$base_url/gallery/";
+
   foreach($displaySubmissionStatuses as $parameterId => $submissionStatus) {
     $stmt->bindValue(($parameterId + 1), $submissionStatus, PDO::PARAM_INT);
   }
@@ -99,7 +113,6 @@ if(!is_null($profSlug)) {
 }
 
 // To see if there's one extra to load next pagniation
-
 $stmt->execute();
 
 $numberOfPosts = $stmt->rowCount();
@@ -168,13 +181,28 @@ if($numberOfPosts == 0) {
 
         if($filter == "sort") {
           $title = "Recent";
+
+          $meta['og:title'] = [];
+          $meta['og:title']['content'] = "Recent Drawings of Professors!";
+
         } else if($filter == "uni") {
           $title = $uniName;
+
+          $meta['og:title'] = [];
+          $meta['og:title']['content'] = "Drawings of Professors from $uniName!";
+
         } else if($filter == "prof") {
           $title = $profName;
+
+          $meta['og:title'] = [];
+          $meta['og:title']['content'] = "Drawings of $profName from $uniName!";
         }
 
-        showHeader($title);
+        // If link is shared, only public/approved link will show so first approved drawing will show
+        $meta['og:image'] = [];
+        $meta['og:image']['content'] = "$base_url/drawings/$drawingFilename";
+
+        showHeader($title, $meta);
 
         if(isset($_GET['searcherror'])) {
           ?>

@@ -17,6 +17,20 @@ $meta['og:title']['content'] = $title;
 $meta['og:description'] = [];
 $meta['og:description']['content'] = "Draw your professors on DrawProf!";
 
+// Load Latest Approved Image
+$stmt = $conn->prepare("SELECT drawingId, profSlug, uniSlug FROM drawprof_drawings, drawprof_unis, drawprof_profs WHERE drawprof_drawings.status = 1 AND drawprof_drawings.profId = drawprof_profs.profId AND drawprof_profs.uniId = drawprof_unis.uniId ORDER BY submittedTime DESC LIMIT 1");
+$stmt->execute();
+while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+  $drawingId = $row['drawingId'];
+  $profSlug = $row['profSlug'];
+  $uniSlug = $row['uniSlug'];
+
+  $drawingFilename = "$uniSlug-$profSlug-$drawingId.png";
+
+  $meta['og:image'] = [];
+  $meta['og:image']['content'] = "$base_url/drawings/$drawingFilename";
+}
+
 // Since only 1, safe to do this
 showHeader($title, $meta);
 

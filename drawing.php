@@ -53,7 +53,7 @@ if(is_null($drawingId) || $drawingId == '') {
 
     $drawingFilename = "$uniSlug-$profSlug-$drawingId.png";
 
-    $link = $base_url . "/$uniSlug/$profSlug/$drawingId";
+    $link =  "$base_url/$uniSlug/$profSlug/$drawingId";
 
     // Constructing Meta Tags
     $title = "$profName by $artist";
