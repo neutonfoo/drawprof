@@ -1,7 +1,19 @@
 <?php
 require 'config.php';
 
-showHeader('About');
+$meta['og:url'] = [];
+$meta['og:url']['content'] = "$base_url/about";
+
+$meta['og:type'] = [];
+$meta['og:type']['content'] = "article";
+
+$meta['og:title'] = [];
+$meta['og:title']['content'] = "About DrawProf";
+
+$meta['og:description'] = [];
+$meta['og:description']['content'] = "DrawProf was inspired by the now defunct Draw Your Professor. DrawProf was started at SB Hacks V. Show off your artistic and creative abilities! Draw your college professors on DrawProf!";
+
+showHeader('About', $meta);
 ?>
 <div class="row justify-content-center">
   <div class="col-md-8">

@@ -7,11 +7,24 @@ if(isset($_GET['q'])) {
   $query = $_GET['q'];
 }
 
-showHeader($query);
-
 if(strlen($query) < 5) {
   header("Location: $base_url/gallery?searcherror=1");
 }
+
+$meta['og:url'] = [];
+$meta['og:url']['content'] = "$base_url/search";
+
+$meta['og:type'] = [];
+$meta['og:type']['content'] = "article";
+
+$meta['og:title'] = [];
+$meta['og:title']['content'] = "Search DrawProf";
+
+$meta['og:description'] = [];
+$meta['og:description']['content'] = "Show off your artistic and creative abilities! Draw your college professors on DrawProf!";
+
+showHeader($query, $meta);
+
 ?>
 
 

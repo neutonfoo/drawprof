@@ -10,7 +10,6 @@ function showHeader($title, $meta = null) {
       <meta charset="utf-8">
       <title><?=$title; ?> | DrawProf</title>
       <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-      <meta name="description" content="Show off your artistic and creative abilities and draw your college professors on DrawProf!">
       <meta name="viewport" content="width=device-width, initial-scale=1">
       <link rel="stylesheet" href="<?=$base_url; ?>/css/bootstrap.min.css"/>
       <script type="text/javascript" src="<?=$base_url; ?>/js/jquery-3.3.1.min.js"></script>

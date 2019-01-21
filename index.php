@@ -15,7 +15,7 @@ $meta['og:title'] = [];
 $meta['og:title']['content'] = $title;
 
 $meta['og:description'] = [];
-$meta['og:description']['content'] = "Draw your professors on DrawProf!";
+$meta['og:description']['content'] = "Show off your artistic and creative abilities! Draw your college professors on DrawProf!";
 
 // Load Latest Approved Image
 $stmt = $conn->prepare("SELECT drawingId, profSlug, uniSlug FROM drawprof_drawings, drawprof_unis, drawprof_profs WHERE drawprof_drawings.status = 1 AND drawprof_drawings.profId = drawprof_profs.profId AND drawprof_profs.uniId = drawprof_unis.uniId ORDER BY submittedTime DESC LIMIT 1");

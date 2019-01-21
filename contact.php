@@ -1,7 +1,19 @@
 <?php
 require 'config.php';
 
-showHeader('Contact');
+$meta['og:url'] = [];
+$meta['og:url']['content'] = "$base_url/contact";
+
+$meta['og:type'] = [];
+$meta['og:type']['content'] = "article";
+
+$meta['og:title'] = [];
+$meta['og:title']['content'] = "Contact DrawProf";
+
+$meta['og:description'] = [];
+$meta['og:description']['content'] = "The contact page for DrawProf. Show off your artistic and creative abilities! Draw your college professors on DrawProf!";
+
+showHeader('Contact', $meta);
 ?>
 <div class="row justify-content-center">
   <div class="col-md-8">

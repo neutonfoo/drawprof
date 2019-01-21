@@ -91,7 +91,7 @@ if(!is_null($profSlug)) {
   $stmt->bindParam($numberOfSubmissionStatuses + 2, $postsToLoad, PDO::PARAM_INT);
   $stmt->bindParam($numberOfSubmissionStatuses + 3, $offset, PDO::PARAM_INT);
 } else {
-  // Display all by recent by default
+  // Display all by new by default
   $filter = "sort";
 
   if($sort == "new") {
@@ -198,12 +198,32 @@ if($numberOfPosts == 0) {
 
           if($sort == "new") {
             $title = "New";
+
+            $meta['og:title'] = [];
+            $meta['og:title']['content'] = "New Drawings of Professors!";
+
+            $meta['og:description'] = [];
+            $meta['og:description']['content'] = "New Drawings of Professors! Show off your artistic and creative abilities! Draw your college professors on DrawProf!";
+
           } else if($sort == "top") {
             $title = "Top";
-          }
 
-          $meta['og:title'] = [];
-          $meta['og:title']['content'] = "Recent Drawings of Professors!";
+            $meta['og:title'] = [];
+            $meta['og:title']['content'] = "Top Drawings of Professors!";
+
+            $meta['og:description'] = [];
+            $meta['og:description']['content'] = "Top Drawings of Professors! Show off your artistic and creative abilities! Draw your college professors on DrawProf!";
+
+          } else {
+            // Default to New
+
+            $meta['og:title'] = [];
+            $meta['og:title']['content'] = "New Drawings of Professors!";
+
+            $meta['og:description'] = [];
+            $meta['og:description']['content'] = "New Drawings of Professors! Show off your artistic and creative abilities! Draw your college professors on DrawProf!";
+
+          }
 
         } else if($filter == "uni") {
           $title = $uniName;
@@ -211,11 +231,18 @@ if($numberOfPosts == 0) {
           $meta['og:title'] = [];
           $meta['og:title']['content'] = "Drawings of Professors from $uniName!";
 
+          $meta['og:description'] = [];
+          $meta['og:description']['content'] = "Drawings of Professors from $uniName! Show off your artistic and creative abilities! Draw your college professors on DrawProf!";
+
         } else if($filter == "prof") {
           $title = $profName;
 
           $meta['og:title'] = [];
           $meta['og:title']['content'] = "Drawings of $profName from $uniName!";
+
+          $meta['og:description'] = [];
+          $meta['og:description']['content'] = "Drawings of $profName from $uniName! Show off your artistic and creative abilities! Draw your college professors on DrawProf!";
+
         }
 
         // If link is shared, only public/approved link will show so first approved drawing will show

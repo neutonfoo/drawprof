@@ -116,7 +116,7 @@ $(document).ready(function() {
 
   // Color Picker
   var $colorPickerContainer = $('#colorPickerContainer')
-  var colors = ['#FFFFFF', '#E4E4E4', '#888888', '#222222', '#FDA8D1', '#E20A17', '#E39423', '#9F6A45', '#E4D72F', '#96DE50', '#1DBC20', '#23D3DC', '#1484C5', '#0920E6', '#CE72E2', '#810F7E']
+  var colors = ['#FFFFFF', '#E4E4E4', '#888888', '#222222', '#FDA8D1', '#E20A17', '#FFE0BD', '#FFCD94', '#EAC086', '#E39423', '#9F6A45', '#E4D72F', '#96DE50', '#1DBC20', '#23D3DC', '#1484C5', '#0920E6', '#CE72E2', '#810F7E']
   $.each(colors, function(colorIndex, color) {
     $colorPickerContainer.append(`<span class="color" style="background-color:${ color }" data-colorindex="${ colorIndex }"></span>`)
   })
