@@ -15,7 +15,7 @@ body {
 
 .canvasContainer #c, .drawingContainer .d {
   /* margin: 10px; */
-  border:3px double #000;
+  border:8px inset #CCC;
 }
 
 .drawingContainer img {
