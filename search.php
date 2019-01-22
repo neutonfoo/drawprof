@@ -7,7 +7,7 @@ if(isset($_GET['q'])) {
   $query = $_GET['q'];
 }
 
-if(strlen($query) < 5) {
+if(strlen($query) < 3) {
   header("Location: $base_url/gallery?searcherror=1");
 }
 
@@ -31,7 +31,7 @@ showHeader($query, $meta);
 <div class="row justify-content-center">
   <div class="col-md-8">
     <h1>Search Results for&nbsp;<mark><?=$query; ?></mark></h1>
-    <p class="lead">Search results have been limited to 10 results during <b>Open Beta</b>.</p>
+    <p class="lead">Search results have been limited to 20 results.</p>
   </div>
 </div>
 
@@ -45,7 +45,7 @@ showHeader($query, $meta);
   <div class="col-md-8">
 
   <?php
-  $stmt = $conn->prepare("SELECT drawprof_profs.profName, drawprof_profs.profSlug, drawprof_unis.uniName, drawprof_unis.uniSlug FROM drawprof_profs INNER JOIN drawprof_unis ON drawprof_profs.uniId = drawprof_unis.uniId WHERE profName LIKE ? ORDER BY profName ASC LIMIT 10");
+  $stmt = $conn->prepare("SELECT drawprof_profs.profName, drawprof_profs.profSlug, drawprof_unis.uniName, drawprof_unis.uniSlug FROM drawprof_profs INNER JOIN drawprof_unis ON drawprof_profs.uniId = drawprof_unis.uniId WHERE profName LIKE ? ORDER BY profName ASC LIMIT 20");
   $stmt->execute(['%'.$query.'%']);
 
   if($stmt->rowCount() == 0) {

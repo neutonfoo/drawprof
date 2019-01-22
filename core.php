@@ -82,7 +82,7 @@ function showHeader($title, $meta = null) {
             <!-- Main Alert -->
             <div class="alert alert-info" role="alert">
               <div class="h4 alert-heading">Announcement</div>
-              <p class="mb-0">Welcome to DrawYourProfessors! Officially launched January 21, 2019 🎉🎉🎉</p>
+              <p class="mb-0">Welcome to DrawYourProfessors.com!</p>
             </div>
           </div>
         </div>

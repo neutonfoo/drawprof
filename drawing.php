@@ -153,29 +153,34 @@ if(is_null($drawingId) || $drawingId == '') {
         </div>
       </div>
 
-      <!-- Like Button -->
-      <form method="post">
-        <div class="row">
-          <div class="col-12 text-center">
-            <small class="text-dark"><?=$likes; ?> Like<?php if($likes != 1) { ?>s<?php } ?></small>
-            <?php
-            if(in_array($drawingId, $_SESSION['likedDrawings'])) {
-              ?>
-              <button type="button" class="btn btn-secondary btn-sm align-baseline p-1" disabled>Already Liked</button>
-              <?php
-            } else {
-              ?>
-              <input type="hidden" name="like" value="1">
-              <input type="hidden" name="formSubmit" value="1">
-              <button type="submit" class="btn btn-primary btn-sm align-baseline p-1">Like</button>
-            </form>
-            <?php
-          }
-          ?>
-        </div>
-      </div>
-
       <?php
+
+      // Can only like approved submissions
+      if($status == 1) {
+        ?>
+        <!-- Like Button -->
+        <form method="post">
+          <div class="row">
+            <div class="col-12 text-center">
+              <small class="text-dark"><?=$likes; ?> Like<?php if($likes != 1) { ?>s<?php } ?></small>
+              <?php
+              if(in_array($drawingId, $_SESSION['likedDrawings'])) {
+                ?>
+                <button type="button" class="btn btn-secondary btn-sm align-baseline p-1" disabled>Already Liked</button>
+                <?php
+              } else {
+                ?>
+                <input type="hidden" name="like" value="1">
+                <input type="hidden" name="formSubmit" value="1">
+                <button type="submit" class="btn btn-primary btn-sm align-baseline p-1">Like</button>
+              </form>
+              <?php
+            }
+            ?>
+          </div>
+        </div>
+        <?php
+      }
 
       if(isSuperAdmin()) {
         if($status != 0) {

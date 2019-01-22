@@ -225,6 +225,9 @@ if($numberOfPosts == 0) {
 
           }
 
+          $meta['og:image'] = [];
+          $meta['og:image']['content'] = "$base_url/drawings/university-of-southern-california-yuka-kumagai-2450760-17.png";
+
         } else if($filter == "uni") {
           $title = $uniName;
 
@@ -233,6 +236,9 @@ if($numberOfPosts == 0) {
 
           $meta['og:description'] = [];
           $meta['og:description']['content'] = "Drawings of Professors from $uniName! Show off your artistic and creative abilities! Draw your college professors on DrawYourProfessors!";
+
+          $meta['og:image'] = [];
+          $meta['og:image']['content'] = "$base_url/drawings/$drawingFilename";
 
         } else if($filter == "prof") {
           $title = $profName;
@@ -243,18 +249,23 @@ if($numberOfPosts == 0) {
           $meta['og:description'] = [];
           $meta['og:description']['content'] = "Drawings of $profName from $uniName! Show off your artistic and creative abilities! Draw your college professors on DrawYourProfessors!";
 
+          $meta['og:image'] = [];
+          $meta['og:image']['content'] = "$base_url/drawings/$drawingFilename";
+
         }
 
         // If link is shared, only public/approved link will show so first approved drawing will show
-        $meta['og:image'] = [];
-        $meta['og:image']['content'] = "$base_url/drawings/$drawingFilename";
+
+        // Just gonna hard code this for now
+        // $meta['og:image'] = [];
+        // $meta['og:image']['content'] = "$base_url/drawings/university-of-southern-california-yuka-kumagai-2450760-17.png";
 
         showHeader($title, $meta);
 
         if(isset($_GET['searcherror'])) {
           ?>
           <div class="alert alert-warning" role="alert">
-            Your search query has to be at least 5 characters.
+            Your search query has to be at least 3 characters.
           </div>
           <?php
         }
