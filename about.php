@@ -8,10 +8,10 @@ $meta['og:type'] = [];
 $meta['og:type']['content'] = "article";
 
 $meta['og:title'] = [];
-$meta['og:title']['content'] = "About DrawProf";
+$meta['og:title']['content'] = "About DrawYourProfessors";
 
 $meta['og:description'] = [];
-$meta['og:description']['content'] = "DrawProf was inspired by the now defunct Draw Your Professor. DrawProf was started at SB Hacks V. Show off your artistic and creative abilities! Draw your college professors on DrawProf!";
+$meta['og:description']['content'] = "DrawYourProfessors was inspired by the now defunct Draw Your Professor. DrawYourProfessors was started at SB Hacks V. Show off your artistic and creative abilities! Draw your college professors on DrawYourProfessors!";
 
 showHeader('About', $meta);
 ?>
@@ -22,7 +22,8 @@ showHeader('About', $meta);
 </div>
 <div class="row justify-content-center">
   <div class="col-md-8">
-    <p>DrawProf was inspired by the now defunct <a href="https://twitter.com/drawyourprof?lang=en">Draw Your Professor</a>.</p> DrawProf was started at <a href="https://www.sbhacks.com/">SB Hacks V</a>. The original DevPost can be found here: <a href="https://devpost.com/software/drawprof">https://devpost.com/software/drawprof</a>.</p>
+    <p>DrawYourProfessors was inspired by the now defunct <a href="https://twitter.com/drawyourprof?lang=en">Draw Your Professor</a>.</p> DrawYourProfessors was started at <a href="https://www.sbhacks.com/">SB Hacks V</a> as DrawProf. The original DevPost can be found here: <a href="https://devpost.com/software/drawprof">https://devpost.com/software/drawprof</a>.</p>
+    <p>DrawYourProfessors is not affliated with DrawYourProfessor.com.</p>
   </div>
 </div>
 <?php

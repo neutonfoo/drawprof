@@ -83,7 +83,7 @@ if(is_null($drawingId) || $drawingId == '') {
     // Can't preview unwholesome posts
     if($status != 3) {
       $meta['og:description'] = [];
-      $meta['og:description']['content'] = "A drawing of $profName from $uniName by $artist! Show off your artistic and creative abilities! Draw your college professors on DrawProf!";
+      $meta['og:description']['content'] = "A drawing of $profName from $uniName by $artist! Show off your artistic and creative abilities! Draw your college professors on DrawYourProfessors!";
 
       $meta['og:image'] = [];
       $meta['og:image']['content'] = "$base_url/drawings/$drawingFilename";

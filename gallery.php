@@ -203,7 +203,7 @@ if($numberOfPosts == 0) {
             $meta['og:title']['content'] = "New Drawings of Professors!";
 
             $meta['og:description'] = [];
-            $meta['og:description']['content'] = "New Drawings of Professors! Show off your artistic and creative abilities! Draw your college professors on DrawProf!";
+            $meta['og:description']['content'] = "New Drawings of Professors! Show off your artistic and creative abilities! Draw your college professors on DrawYourProfessors!";
 
           } else if($sort == "top") {
             $title = "Top";
@@ -212,7 +212,7 @@ if($numberOfPosts == 0) {
             $meta['og:title']['content'] = "Top Drawings of Professors!";
 
             $meta['og:description'] = [];
-            $meta['og:description']['content'] = "Top Drawings of Professors! Show off your artistic and creative abilities! Draw your college professors on DrawProf!";
+            $meta['og:description']['content'] = "Top Drawings of Professors! Show off your artistic and creative abilities! Draw your college professors on DrawYourProfessors!";
 
           } else {
             // Default to New
@@ -221,7 +221,7 @@ if($numberOfPosts == 0) {
             $meta['og:title']['content'] = "New Drawings of Professors!";
 
             $meta['og:description'] = [];
-            $meta['og:description']['content'] = "New Drawings of Professors! Show off your artistic and creative abilities! Draw your college professors on DrawProf!";
+            $meta['og:description']['content'] = "New Drawings of Professors! Show off your artistic and creative abilities! Draw your college professors on DrawYourProfessors!";
 
           }
 
@@ -232,7 +232,7 @@ if($numberOfPosts == 0) {
           $meta['og:title']['content'] = "Drawings of Professors from $uniName!";
 
           $meta['og:description'] = [];
-          $meta['og:description']['content'] = "Drawings of Professors from $uniName! Show off your artistic and creative abilities! Draw your college professors on DrawProf!";
+          $meta['og:description']['content'] = "Drawings of Professors from $uniName! Show off your artistic and creative abilities! Draw your college professors on DrawYourProfessors!";
 
         } else if($filter == "prof") {
           $title = $profName;
@@ -241,7 +241,7 @@ if($numberOfPosts == 0) {
           $meta['og:title']['content'] = "Drawings of $profName from $uniName!";
 
           $meta['og:description'] = [];
-          $meta['og:description']['content'] = "Drawings of $profName from $uniName! Show off your artistic and creative abilities! Draw your college professors on DrawProf!";
+          $meta['og:description']['content'] = "Drawings of $profName from $uniName! Show off your artistic and creative abilities! Draw your college professors on DrawYourProfessors!";
 
         }
 

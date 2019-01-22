@@ -8,13 +8,14 @@ function showHeader($title, $meta = null) {
   <html lang="en" dir="ltr">
     <head>
       <meta charset="utf-8">
-      <title><?=$title; ?> | DrawProf</title>
+      <title><?=$title; ?> | DrawYourProfessors.com</title>
       <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1">
       <link rel="stylesheet" href="<?=$base_url; ?>/css/bootstrap.min.css"/>
       <script type="text/javascript" src="<?=$base_url; ?>/js/jquery-3.3.1.min.js"></script>
       <script type="text/javascript" src="<?=$base_url; ?>/js/bootstrap.min.js"></script>
       <link rel="stylesheet" href="<?=$base_url; ?>/css/master.css">
+      <link href="<?=$base_url; ?>/favicon.ico" rel="icon" type="image/x-icon" />
       <?php
 
         if(!is_null($meta) && $show_meta) {
@@ -54,7 +55,7 @@ function showHeader($title, $meta = null) {
     <body>
       <!-- Navigation Bar -->
       <nav class="navbar navbar-dark bg-dark navbar-expand-sm">
-        <a class="navbar-brand" href="<?=$base_url; ?>/">DrawProf</a>
+        <a class="navbar-brand" href="<?=$base_url; ?>/">DrawYourProfessors</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -81,8 +82,7 @@ function showHeader($title, $meta = null) {
             <!-- Main Alert -->
             <div class="alert alert-info" role="alert">
               <div class="h4 alert-heading">Announcement</div>
-              <p class="mb-0">DrawProf is currently in <b>Open Beta</b> 🎉🎉🎉</p>
-                <!-- You can send all bug reports to our email <a href="mailto:drawprof@salhacks.com?Subject=About%DrawProf" class="alert-link ">drawprof@salhacks.com</a>. -->
+              <p class="mb-0">Welcome to DrawYourProfessors! Officially launched January 21, 2019 🎉🎉🎉</p>
             </div>
           </div>
         </div>
@@ -104,7 +104,7 @@ function showFooter() {
         <footer class="mt-3 mb-3 pt-3 pb-1 border-top">
           <div class="row">
             <div class="col-12 text-center">
-              <span class="p-1">&copy; 2019 DrawProf</span>
+              <span class="p-1">&copy; 2019 DrawYourProfessors</span>
               <span class="mx-2">&bull;</span>
               <a href="<?=$base_url; ?>/about" class="p-1">About</a>
               <span class="mx-2">&bull;</span>

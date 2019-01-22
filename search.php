@@ -18,10 +18,10 @@ $meta['og:type'] = [];
 $meta['og:type']['content'] = "article";
 
 $meta['og:title'] = [];
-$meta['og:title']['content'] = "Search DrawProf";
+$meta['og:title']['content'] = "Search DrawYourProfessors";
 
 $meta['og:description'] = [];
-$meta['og:description']['content'] = "Show off your artistic and creative abilities! Draw your college professors on DrawProf!";
+$meta['og:description']['content'] = "Show off your artistic and creative abilities! Draw your college professors on DrawYourProfessors!";
 
 showHeader($query, $meta);
 
