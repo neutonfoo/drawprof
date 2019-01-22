@@ -36,7 +36,7 @@ function showHeader($title, $meta = null) {
 
         if($show_analytics) {
           ?>
-          <meta name="google-site-verification" content="sJGnP-uRxCx719xhBxUiqA45-DYNhvrtynTT4_SJHqw" />
+          <meta name="google-site-verification" content="vZGsp7GN1PlzrcJUioMjljE3POXYylyBmR1S7lKc0kk" />
           <!-- Global site tag (gtag.js) - Google Analytics -->
           <script async src="https://www.googletagmanager.com/gtag/js?id=UA-132697667-2"></script>
           <script>
