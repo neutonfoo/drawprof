@@ -1,8 +1,8 @@
 RewriteEngine On
 
 # Matches Hardcoded Gallery
-RewriteRule ^gallery/new?$ gallery.php?sort=new [L,QSA]
-RewriteRule ^gallery/top?$ gallery.php?sort=top [L,QSA]
+RewriteRule ^gallery/new/?$ gallery.php?sort=new [L,QSA]
+RewriteRule ^gallery/top/?$ gallery.php?sort=top [L,QSA]
 
 # Matches Search
 RewriteRule ^search$ search.php [L,QSA]
